@@ -67,14 +67,14 @@ function This_MOD.get_entities()
     local Space = {}
 
     --- Buscar las entidades a afectar
-    for key, entity in pairs(GPrefix.entities) do
-        if GPrefix.get_key(This_MOD.types, key) then
+    for _, entity in pairs(GPrefix.entities) do
+        if GPrefix.get_key(This_MOD.types, entity.type) then
             Space.item = GPrefix.get_item_create_entity(entity)
             if Space.item then
                 Space.entity = entity
-                Space.recipes = GPrefix.recipes[Space.item][1] or {}
-                Space.tech = GPrefix.get_technology(Space.recipes)
-                This_MOD.entities[key] = Space
+                Space.recipe = GPrefix.recipes[Space.item.name][1] or {}
+                Space.tech = GPrefix.get_technology(Space.recipe)
+                This_MOD.entities[entity.name] = Space
             end
         end
     end
@@ -101,3 +101,5 @@ end
 This_MOD.start()
 
 ---------------------------------------------------------------------------------------------------
+GPrefix.var_dump(This_MOD)
+ERROR()
