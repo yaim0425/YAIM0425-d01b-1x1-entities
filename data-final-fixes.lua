@@ -31,6 +31,7 @@ function This_MOD.setting_mod()
     --- Contenedor
     This_MOD.entities = {}
 
+    --- Tipos a afectar
     This_MOD.types = {
         "furnace",
         -- "mining-drill",
