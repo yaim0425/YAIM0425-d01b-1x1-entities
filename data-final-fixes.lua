@@ -65,7 +65,7 @@ function This_MOD.get_entities()
             Space.item = GPrefix.get_item_create_entity(entity)
             if Space.item then
                 Space.entity = entity
-                Space.recipes = GPrefix.recipes[Space.item][1]
+                Space.recipes = GPrefix.recipes[Space.item][1] or {}
                 Space.tech = GPrefix.get_technology(Space.recipes)
                 This_MOD.entities[key] = Space
             end
