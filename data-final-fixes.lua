@@ -18,6 +18,13 @@ function This_MOD.start()
     --- Valores de la referencia
     This_MOD.setting_mod()
 
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Entidades a afectar
+    This_MOD.get_entities()
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     --- Cambiar la propiedad necesaria
     This_MOD.change_property()
 
