@@ -75,7 +75,9 @@ function This_MOD.get_entities()
                 Space.entity = entity
                 Space.recipe = GPrefix.recipes[Space.item.name][1] or {}
                 Space.tech = GPrefix.get_technology(Space.recipe)
-                This_MOD.entities[entity.name] = Space
+                -- This_MOD.entities[entity.name] = Space
+                This_MOD.entities[entity.type] = This_MOD.entities[entity.type] or {}
+                table.insert(This_MOD.entities[entity.type], Space)
             end
         end
     end
