@@ -74,7 +74,8 @@ function This_MOD.get_entities()
             if Space.item then
                 --- Valores para el proceso
                 Space.entity = entity
-                Space.recipe = GPrefix.recipes[Space.item.name][1] or {}
+                Space.recipe = GPrefix.recipes[Space.item.name] or {}
+                Space.recipe = Space.recipe[1] or nil
                 Space.tech = GPrefix.get_technology(Space.recipe)
 
                 --- Guardar información
