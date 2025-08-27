@@ -41,7 +41,7 @@ function This_MOD.setting_mod()
     --- Tipos a afectar
     This_MOD.types = {
         "furnace",
-        -- "mining-drill",
+        "mining-drill",
         "assembling-machine",
         "radar",
         "storage-tank",
