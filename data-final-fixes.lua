@@ -78,7 +78,7 @@ function This_MOD.get_entities()
                 Space.recipe = Space.recipe[1] or nil
                 Space.tech = GPrefix.get_technology(Space.recipe)
 
-                --- Guardar información
+                --- Guardar la información
                 This_MOD.entities[entity.type] = This_MOD.entities[entity.type] or {}
                 This_MOD.entities[entity.type][entity.name] = Space
             end
