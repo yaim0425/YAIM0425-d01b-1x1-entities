@@ -72,12 +72,14 @@ function This_MOD.get_entities()
             Space = {}
             Space.item = GPrefix.get_item_create_entity(entity)
             if Space.item then
+                --- Valores para el proceso
                 Space.entity = entity
                 Space.recipe = GPrefix.recipes[Space.item.name][1] or {}
                 Space.tech = GPrefix.get_technology(Space.recipe)
-                -- This_MOD.entities[entity.name] = Space
+
+                --- Guardar información
                 This_MOD.entities[entity.type] = This_MOD.entities[entity.type] or {}
-                table.insert(This_MOD.entities[entity.type], Space)
+                This_MOD.entities[entity.type][entity.name] = Space
             end
         end
     end
