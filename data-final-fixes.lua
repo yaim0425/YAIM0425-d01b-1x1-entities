@@ -101,32 +101,9 @@ end
 function This_MOD.change_property()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-end
-
---- Cambia la scala de la entidad
-function This_MOD.change_scale(Table)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Validación
-    if not Table then return end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Estructura a modificar
-    if Table.layers then
-        for _, layer in pairs(Table.layers) do
-            layer.scale = (layer.scale or 1) * This_MOD.new_scale
-            if layer.shift then
-                layer.shift[1] = layer.shift[1] * This_MOD.new_scale
-                layer.shift[2] = layer.shift[2] * This_MOD.new_scale
-            end
-        end
-    else
-        Table.scale = (Table.scale or 1) * This_MOD.new_scale
-        if Table.shift then
-            Table.shift[1] = Table.shift[1] * This_MOD.new_scale
-            Table.shift[2] = Table.shift[2] * This_MOD.new_scale
+    for _, spaces in pairs(This_MOD.entities) do
+        for _, space in pairs(spaces) do
+            This_MOD.create_entity(space)
         end
     end
 
@@ -143,6 +120,10 @@ function This_MOD.create_entity(space)
 
     --- Duplicar la entidad
     local Entity = util.copy(space.entity)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    ---- Modificar según el tipo
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -224,10 +205,6 @@ function This_MOD.create_entity(space)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    ---- Modificar según el tipo
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
     --- Crear el prototipo
     GPrefix.extend(Entity)
 
@@ -235,6 +212,35 @@ function This_MOD.create_entity(space)
     This_MOD.new_entity = This_MOD.new_entity or {}
     This_MOD.new_entity[Entity.type] = This_MOD.new_entity[Entity.type] or {}
     This_MOD.new_entity[Entity.type][Entity.name] = Entity
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+--- Cambia la scala de la entidad
+function This_MOD.change_scale(Table)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Validación
+    if not Table then return end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Estructura a modificar
+    if Table.layers then
+        for _, layer in pairs(Table.layers) do
+            layer.scale = (layer.scale or 1) * This_MOD.new_scale
+            if layer.shift then
+                layer.shift[1] = layer.shift[1] * This_MOD.new_scale
+                layer.shift[2] = layer.shift[2] * This_MOD.new_scale
+            end
+        end
+    else
+        Table.scale = (Table.scale or 1) * This_MOD.new_scale
+        if Table.shift then
+            Table.shift[1] = Table.shift[1] * This_MOD.new_scale
+            Table.shift[2] = Table.shift[2] * This_MOD.new_scale
+        end
+    end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -252,6 +258,7 @@ This_MOD.start()
 
 ---------------------------------------------------------------------------------------------------
 
+if true then return end
 local entities = {
     ['furnace'] = {
         ['stone-furnace'] = {
