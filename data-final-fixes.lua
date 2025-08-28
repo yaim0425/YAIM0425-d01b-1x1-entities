@@ -143,9 +143,6 @@ function This_MOD.create_entity(space)
 
     --- Duplicar la entidad
     local Entity = util.copy(space.entity)
-    This_MOD.new_entity = This_MOD.new_entity or {}
-    This_MOD.new_entity[Entity.type] = This_MOD.new_entity[Entity.type] or {}
-    This_MOD.new_entity[Entity.type][Entity.name] = Entity
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -233,6 +230,11 @@ function This_MOD.create_entity(space)
 
     --- Crear el prototipo
     GPrefix.extend(Entity)
+
+    --- Guardar el prototipo
+    This_MOD.new_entity = This_MOD.new_entity or {}
+    This_MOD.new_entity[Entity.type] = This_MOD.new_entity[Entity.type] or {}
+    This_MOD.new_entity[Entity.type][Entity.name] = Entity
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
