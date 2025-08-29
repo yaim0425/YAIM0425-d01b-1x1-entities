@@ -126,8 +126,6 @@ function This_MOD.create_entity(space)
     --- Validación
     if not space.entity then return end
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
     --- Duplicar la entidad
     local Entity = util.copy(space.entity)
 
