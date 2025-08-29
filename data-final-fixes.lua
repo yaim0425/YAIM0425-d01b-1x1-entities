@@ -131,8 +131,6 @@ function This_MOD.create_entity(space)
     --- Duplicar la entidad
     local Entity = util.copy(space.entity)
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
     --- Modificar según el tipo
     Entity = This_MOD.types[Entity.type](Entity)
 
