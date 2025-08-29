@@ -128,6 +128,7 @@ function This_MOD.create_entity(space)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Cambiar algunas propiedades
+    Entity.name = This_MOD.prefix .. GPrefix.delete_prefix(Entity.name)
     Entity.next_upgrade = nil
     Entity.alert_icon_shift = nil
     Entity.collision_box = This_MOD.collision_box
@@ -273,8 +274,8 @@ This_MOD.start()
 
 ---------------------------------------------------------------------------------------------------
 
-GPrefix.var_dump(This_MOD)
-ERROR()
+-- GPrefix.var_dump(This_MOD)
+-- ERROR()
 
 if true then return end
 local entities = {
