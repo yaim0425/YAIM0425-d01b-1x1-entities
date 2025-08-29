@@ -55,6 +55,26 @@ function This_MOD.setting_mod()
     This_MOD.collision_box = { { -0.3, -0.3 }, { 0.3, 0.3 } }
     This_MOD.selection_box = { { -0.5, -0.5 }, { 0.5, 0.5 } }
 
+    --- Indicador del mod
+    local Indicator
+    This_MOD.indicator = {}
+
+    Indicator = data.raw["virtual-signal"]["up-right-arrow"].icons[1].icon
+    Indicator = { icon = Indicator, scale = 0.50, shift = { 0, -50 } }
+    table.insert(This_MOD.indicator, Indicator)
+
+    Indicator = data.raw["virtual-signal"]["down-right-arrow"].icons[1].icon
+    Indicator = { icon = Indicator, scale = 0.50, shift = { 0, -50 } }
+    table.insert(This_MOD.indicator, Indicator)
+
+    Indicator = data.raw["virtual-signal"]["up-left-arrow"].icons[1].icon
+    Indicator = { icon = Indicator, scale = 0.50, shift = { 0, -50 } }
+    table.insert(This_MOD.indicator, Indicator)
+
+    Indicator = data.raw["virtual-signal"]["down-left-arrow"].icons[1].icon
+    Indicator = { icon = Indicator, scale = 0.50, shift = { 0, -50 } }
+    table.insert(This_MOD.indicator, Indicator)
+
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
