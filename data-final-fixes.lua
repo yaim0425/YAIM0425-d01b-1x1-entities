@@ -75,7 +75,7 @@ function This_MOD.get_entities()
 
     --- Buscar las entidades a afectar
     for _, entity in pairs(GPrefix.entities) do
-        if GPrefix.get_key(This_MOD.types, entity.type) then
+        if This_MOD.types[entity.type] then
             Space = {}
             Space.item = GPrefix.get_item_create_entity(entity)
             if Space.item then
@@ -269,6 +269,9 @@ end
 This_MOD.start()
 
 ---------------------------------------------------------------------------------------------------
+
+GPrefix.var_dump(This_MOD)
+ERROR()
 
 if true then return end
 local entities = {
