@@ -254,6 +254,9 @@ function This_MOD.is_furnace(entity)
     --- Validación
     if entity.fluid_boxes or entity.fluid_box then return end
 
+    --- Devolver la entidad
+    return entity
+
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
