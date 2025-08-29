@@ -40,9 +40,7 @@ function This_MOD.setting_mod()
 
     --- Tipos a afectar
     This_MOD.types = {
-        ["furnace"] = function (entity)
-            return entity
-        end,
+        ["furnace"] = This_MOD.is_furnace,
         ["mining-drill"] = function (entity)
             return
         end,
@@ -257,6 +255,18 @@ function This_MOD.change_scale(Table)
             Table.shift[2] = Table.shift[2] * This_MOD.new_scale
         end
     end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+---------------------------------------------------------------------------------------------------
+
+--- Hornos
+function This_MOD.is_furnace(entity)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Validación
+    if entity.fluid_boxes or entity.fluid_box then return end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
