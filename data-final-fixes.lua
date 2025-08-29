@@ -41,21 +41,11 @@ function This_MOD.setting_mod()
     --- Tipos a afectar
     This_MOD.types = {
         ["furnace"] = This_MOD.is_furnace,
-        ["mining-drill"] = function (entity)
-            return
-        end,
-        ["assembling-machine"] = function (entity)
-            return
-        end,
-        ["radar"] = function (entity)
-            return
-        end,
-        ["storage-tank"] = function (entity)
-            return
-        end,
-        ["beacon"] = function (entity)
-            return
-        end,
+        ["mining-drill"] = function (entity) end,
+        ["assembling-machine"] = function (entity) end,
+        ["radar"] = function (entity) end,
+        ["storage-tank"] = function (entity) end,
+        ["beacon"] = function (entity) end,
     }
 
     --- Escala a usar
