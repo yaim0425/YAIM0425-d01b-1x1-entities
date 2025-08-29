@@ -123,7 +123,11 @@ function This_MOD.create_entity(space)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    ---- Modificar según el tipo
+    --- Modificar según el tipo
+    Entity = This_MOD.types[Entity.type](Entity)
+
+    --- Validación
+    if not Entity then return end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
