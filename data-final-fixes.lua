@@ -25,8 +25,8 @@ function This_MOD.start()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Cambiar la propiedad necesaria
-    This_MOD.change_property()
+    --- Crear la entidad deseada
+    This_MOD.create_entity()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -48,7 +48,7 @@ function This_MOD.setting_mod()
         ["beacon"] = function(entity) end,
     }
 
-    --- Escala a usar
+    --- Corrección en la escala
     This_MOD.scale = 0.25
 
     --- Cajas a 1x1
@@ -107,138 +107,142 @@ end
 
 ---------------------------------------------------------------------------------------------------
 
---- Cambiar la propiedad necesaria
-function This_MOD.change_property()
+--- Crear la entidad deseada
+function This_MOD.create_entity()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+    --- Crear la entidad deseada
+    local function create_entity(space)
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        --- Validación
+        if not space.entity then return end
+
+        --- Duplicar la entidad
+        local Entity = util.copy(space.entity)
+
+        --- Verificar si la entidad es 1x1
+        local Flag = true
+        for i = 1, 2, 1 do
+            for j = 1, 2, 1 do
+                Flag = Flag and Entity.selection_box[i][j] == This_MOD.selection_box[i][j]
+            end
+        end
+        if not Flag then return end
+
+        --- Modificar según el tipo
+        Entity = This_MOD.types[Entity.type](Entity)
+
+        --- Validación
+        if not Entity then return end
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        --- Cambiar algunas propiedades
+        Entity.name = This_MOD.prefix .. GPrefix.delete_prefix(Entity.name)
+        Entity.next_upgrade = nil
+        Entity.alert_icon_shift = nil
+        Entity.collision_box = This_MOD.collision_box
+        Entity.selection_box = This_MOD.selection_box
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        --- Calcular escala base según tamaño original
+        local Collision_box = space.entity.collision_box
+        local Width = Collision_box[2][1] - Collision_box[1][1]
+        local Height = Collision_box[2][2] - Collision_box[1][2]
+        This_MOD.new_scale = 1 / math.max(Width, Height)
+        This_MOD.new_scale = This_MOD.new_scale - This_MOD.scale * This_MOD.new_scale
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        --- Revisar todas las animaciones
+        This_MOD.change_scale(Entity.animation)
+        This_MOD.change_scale(Entity.idle_animation)
+        This_MOD.change_scale(Entity.active_animation)
+
+        --- Revisar todas las imagenes
+        if Entity.graphics_set then
+            This_MOD.change_scale(Entity.graphics_set.animation)
+            This_MOD.change_scale(Entity.graphics_set.idle_animation)
+            This_MOD.change_scale(Entity.graphics_set.active_animation)
+            if Entity.graphics_set.working_visualisations then
+                for _, vis in pairs(Entity.graphics_set.working_visualisations) do
+                    This_MOD.change_scale(vis.animation)
+                end
+            end
+        end
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        --- Escalar circuit connectors
+        if Entity.circuit_connector then
+            for _, connector in pairs(Entity.circuit_connector) do
+                if connector.sprites then
+                    for _, spr in pairs(connector.sprites) do
+                        if spr.scale then spr.scale = spr.scale * This_MOD.new_scale end
+                        if spr.shift then
+                            spr.shift[1] = spr.shift[1] * This_MOD.new_scale
+                            spr.shift[2] = spr.shift[2] * This_MOD.new_scale
+                        end
+                    end
+                end
+                if connector.points then
+                    for _, side in pairs(connector.points) do
+                        for _, pos in pairs(side) do
+                            pos[1] = pos[1] * This_MOD.new_scale
+                            pos[2] = pos[2] * This_MOD.new_scale
+                        end
+                    end
+                end
+            end
+        end
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        --- Escalar posiciones de fluid_boxes (si existen)
+        if Entity.fluid_boxes or Entity.fluid_box then
+            local fluid_boxes = Entity.fluid_boxes or { Entity.fluid_box }
+            for _, box in pairs(fluid_boxes) do
+                if box.pipe_connections then
+                    for _, conn in pairs(box.pipe_connections) do
+                        if conn.position then
+                            conn.position[1] = 0
+                            conn.position[2] = 0
+                        end
+                    end
+                end
+            end
+        end
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        --- Agregar los indicadores del mod
+        table.insert(Entity.icons, This_MOD.indicator)
+
+        --- Cambiar el tamaño del icono
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        --- Crear el prototipo
+        GPrefix.extend(Entity)
+
+        --- Guardar el prototipo
+        This_MOD.new_entity = This_MOD.new_entity or {}
+        This_MOD.new_entity[Entity.type] = This_MOD.new_entity[Entity.type] or {}
+        This_MOD.new_entity[Entity.type][Entity.name] = Entity
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Recorrer las entidades con el tipo correcto
     for _, spaces in pairs(This_MOD.entities) do
         for _, space in pairs(spaces) do
-            This_MOD.create_entity(space)
+            create_entity(space)
         end
     end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-end
-
-function This_MOD.create_entity(space)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Validación
-    if not space.entity then return end
-
-    --- Duplicar la entidad
-    local Entity = util.copy(space.entity)
-
-    --- Verificar si la entidad es 1x1
-    local Flag = true
-    for i = 1, 2, 1 do
-        for j = 1, 2, 1 do
-            Flag = Flag and Entity.selection_box[i][j] == This_MOD.selection_box[i][j]
-        end
-    end
-    if not Flag then return end
-
-    --- Modificar según el tipo
-    Entity = This_MOD.types[Entity.type](Entity)
-
-    --- Validación
-    if not Entity then return end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Cambiar algunas propiedades
-    Entity.name = This_MOD.prefix .. GPrefix.delete_prefix(Entity.name)
-    Entity.next_upgrade = nil
-    Entity.alert_icon_shift = nil
-    Entity.collision_box = This_MOD.collision_box
-    Entity.selection_box = This_MOD.selection_box
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Calcular escala base según tamaño original
-    local Collision_box = space.entity.collision_box
-    local Width = Collision_box[2][1] - Collision_box[1][1]
-    local Height = Collision_box[2][2] - Collision_box[1][2]
-    This_MOD.new_scale = 1 / math.max(Width, Height)
-    This_MOD.new_scale = This_MOD.new_scale - This_MOD.scale * This_MOD.new_scale
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Revisar todas las animaciones
-    This_MOD.change_scale(Entity.animation)
-    This_MOD.change_scale(Entity.idle_animation)
-    This_MOD.change_scale(Entity.active_animation)
-
-    --- Revisar todas las imagenes
-    if Entity.graphics_set then
-        This_MOD.change_scale(Entity.graphics_set.animation)
-        This_MOD.change_scale(Entity.graphics_set.idle_animation)
-        This_MOD.change_scale(Entity.graphics_set.active_animation)
-        if Entity.graphics_set.working_visualisations then
-            for _, vis in pairs(Entity.graphics_set.working_visualisations) do
-                This_MOD.change_scale(vis.animation)
-            end
-        end
-    end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Escalar circuit connectors
-    if Entity.circuit_connector then
-        for _, connector in pairs(Entity.circuit_connector) do
-            if connector.sprites then
-                for _, spr in pairs(connector.sprites) do
-                    if spr.scale then spr.scale = spr.scale * This_MOD.new_scale end
-                    if spr.shift then
-                        spr.shift[1] = spr.shift[1] * This_MOD.new_scale
-                        spr.shift[2] = spr.shift[2] * This_MOD.new_scale
-                    end
-                end
-            end
-            if connector.points then
-                for _, side in pairs(connector.points) do
-                    for _, pos in pairs(side) do
-                        pos[1] = pos[1] * This_MOD.new_scale
-                        pos[2] = pos[2] * This_MOD.new_scale
-                    end
-                end
-            end
-        end
-    end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Escalar posiciones de fluid_boxes (si existen)
-    if Entity.fluid_boxes or Entity.fluid_box then
-        local fluid_boxes = Entity.fluid_boxes or { Entity.fluid_box }
-        for _, box in pairs(fluid_boxes) do
-            if box.pipe_connections then
-                for _, conn in pairs(box.pipe_connections) do
-                    if conn.position then
-                        conn.position[1] = 0
-                        conn.position[2] = 0
-                    end
-                end
-            end
-        end
-    end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Agregar los indicadores del mod
-    table.insert(Entity.icons, This_MOD.indicator)
-
-    --- Cambiar el tamaño del icono
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Crear el prototipo
-    GPrefix.extend(Entity)
-
-    --- Guardar el prototipo
-    This_MOD.new_entity = This_MOD.new_entity or {}
-    This_MOD.new_entity[Entity.type] = This_MOD.new_entity[Entity.type] or {}
-    This_MOD.new_entity[Entity.type][Entity.name] = Entity
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
