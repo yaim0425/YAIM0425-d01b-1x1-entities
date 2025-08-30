@@ -50,7 +50,7 @@ function This_MOD.setting_mod()
 
     --- Corrección en la escala
     This_MOD.scales = {
-        ["furnace"] = 1,
+        ["furnace"] = 0.25,
         ["mining-drill"] = 1,
         ["assembling-machine"] = 1,
         ["radar"] = 1,
@@ -162,7 +162,7 @@ function This_MOD.create_entity()
         local Width = Collision_box[2][1] - Collision_box[1][1]
         local Height = Collision_box[2][2] - Collision_box[1][2]
         This_MOD.new_scale = 1 / math.max(Width, Height)
-        This_MOD.new_scale = This_MOD.new_scale - This_MOD.scale * This_MOD.new_scale
+        -- This_MOD.new_scale = This_MOD.new_scale - This_MOD.scale * This_MOD.new_scale
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -273,29 +273,28 @@ function This_MOD.create_entity()
 end
 
 --- Cambia la scala de la entidad
-function This_MOD.change_scale(images, scale)
+function This_MOD.change_scale(images)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Validación
     if not images then return end
-    scale = scale or This_MOD.new_scale
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Estructura a modificar
     if images.layers then
         for _, layer in pairs(images.layers) do
-            layer.scale = (layer.scale or 1) * scale
+            layer.scale = (layer.scale or 1) * This_MOD.new_scale
             if layer.shift then
-                layer.shift[1] = layer.shift[1] * scale
-                layer.shift[2] = layer.shift[2] * scale
+                layer.shift[1] = layer.shift[1] * This_MOD.new_scale
+                layer.shift[2] = layer.shift[2] * This_MOD.new_scale
             end
         end
     else
-        images.scale = (images.scale or 1) * scale
+        images.scale = (images.scale or 1) * This_MOD.new_scale
         if images.shift then
-            images.shift[1] = images.shift[1] * scale
-            images.shift[2] = images.shift[2] * scale
+            images.shift[1] = images.shift[1] * This_MOD.new_scale
+            images.shift[2] = images.shift[2] * This_MOD.new_scale
         end
     end
 
