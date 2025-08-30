@@ -222,8 +222,6 @@ function This_MOD.create_entity()
         --- Agregar los indicadores del mod
         table.insert(Entity.icons, This_MOD.indicator)
 
-        --- Cambiar el tamaño del icono
-
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Crear el prototipo
@@ -239,7 +237,7 @@ function This_MOD.create_entity()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Recorrer las entidades con el tipo correcto
+    --- Recorrer las entidades filtrada
     for _, spaces in pairs(This_MOD.entities) do
         for _, space in pairs(spaces) do
             create_entity(space)
