@@ -55,7 +55,7 @@ function This_MOD.setting_mod()
         ["assembling-machine"] = 1,
         ["radar"] = 1,
         ["storage-tank"] = 1,
-        ["beacon"] = 1,
+        ["beacon"] = 0.25,
     }
 
     --- Cajas a 1x1
@@ -132,6 +132,19 @@ function This_MOD.create_entity()
         --- Duplicar la entidad
         local Entity = util.copy(space.entity)
 
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        --- Calcular escala base según tamaño original
+        local Collision_box = space.entity.collision_box
+        local Width = Collision_box[2][1] - Collision_box[1][1]
+        local Height = Collision_box[2][2] - Collision_box[1][2]
+        This_MOD.new_scale = 1 / math.max(Width, Height)
+        This_MOD.new_scale =
+            This_MOD.new_scale -
+            This_MOD.scales[Entity.type] * This_MOD.new_scale
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
         --- Verificar si la entidad es 1x1
         local Selection_box_str =
             Entity.selection_box[1][1] .. " x " .. Entity.selection_box[1][2]
@@ -156,19 +169,9 @@ function This_MOD.create_entity()
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-        --- Calcular escala base según tamaño original
-        local Collision_box = space.entity.collision_box
-        local Width = Collision_box[2][1] - Collision_box[1][1]
-        local Height = Collision_box[2][2] - Collision_box[1][2]
-        This_MOD.new_scale = 1 / math.max(Width, Height)
-        This_MOD.new_scale =
-            This_MOD.new_scale -
-            This_MOD.scales[Entity.type] * This_MOD.new_scale
-
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
         --- Revisar todas las animaciones
         This_MOD.change_scale(Entity.animation)
+        This_MOD.change_scale(Entity.base_picture)
         This_MOD.change_scale(Entity.idle_animation)
         This_MOD.change_scale(Entity.active_animation)
 
@@ -177,6 +180,7 @@ function This_MOD.create_entity()
             This_MOD.change_scale(Entity.graphics_set.animation)
             This_MOD.change_scale(Entity.graphics_set.idle_animation)
             This_MOD.change_scale(Entity.graphics_set.active_animation)
+            This_MOD.change_scale({ layers = Entity.graphics_set.animation_list })
             if Entity.graphics_set.working_visualisations then
                 for _, vis in pairs(Entity.graphics_set.working_visualisations) do
                     This_MOD.change_scale(vis.animation)
@@ -331,78 +335,77 @@ function This_MOD.is_beacon(entity)
 
 
 
+    -- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    -- --- Enlistar las imagenes
+    -- local Animation = {}
+
+    -- if entity.graphics_set and entity.graphics_set.animation_list then
+    --     Animation = entity.graphics_set.animation_list
+    -- end
+
+    -- if entity.animation then
+    --     table.insert(Animation, { animation = entity.animation })
+    -- end
+
+    -- if entity.base_picture then
+    --     table.insert(Animation, { animation = entity.base_picture })
+    -- end
+
+    -- --- Cambiar la escala de las imagenes
+    -- for _, value in pairs(Animation) do
+    --     This_MOD.change_scale(value.animation)
+    -- end
+
+    -- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+    -- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    -- --- Escalar module visualisations
+    -- if entity.graphics_set and entity.graphics_set.module_visualisations then
+    --     for _, vis in pairs(entity.graphics_set.module_visualisations) do
+    --         for _, slot in pairs(vis.slots or {}) do
+    --             for _, pic in pairs(slot) do
+    --                 if pic.pictures then
+    --                     pic.pictures.scale = (pic.pictures.scale or 1) * This_MOD.new_scale
+    --                     if pic.pictures.shift then
+    --                         pic.pictures.shift = {
+    --                             (pic.pictures.shift[1] or 0) * This_MOD.new_scale,
+    --                             (pic.pictures.shift[2] or 0) * This_MOD.new_scale
+    --                         }
+    --                     end
+    --                 end
+    --             end
+    --         end
+    --     end
+    -- end
+
+    -- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+    -- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    -- --- Escalar reflejo en agua
+    -- if entity.water_reflection and entity.water_reflection.pictures then
+    --     entity.water_reflection.pictures.scale =
+    --         (entity.water_reflection.pictures.scale or 1) * This_MOD.new_scale
+    --     if entity.water_reflection.pictures.shift then
+    --         entity.water_reflection.pictures.shift = {
+    --             (entity.water_reflection.pictures.shift[1] or 0) * This_MOD.new_scale,
+    --             (entity.water_reflection.pictures.shift[2] or 0) * This_MOD.new_scale
+    --         }
+    --     end
+    -- end
+
+    -- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Enlistar las imagenes
-    local Animation = {}
-
-    if entity.graphics_set and entity.graphics_set.animation_list then
-        Animation = entity.graphics_set.animation_list
-    end
-
-    if entity.animation then
-        table.insert(Animation, { animation = entity.animation })
-    end
-
-    if entity.base_picture then
-        table.insert(Animation, { animation = entity.base_picture })
-    end
-
-    --- Cambiar la escala de las imagenes
-    for _, value in pairs(Animation) do
-        This_MOD.change_scale(value.animation)
-    end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Escalar module visualisations
-    if entity.graphics_set and entity.graphics_set.module_visualisations then
-        for _, vis in pairs(entity.graphics_set.module_visualisations) do
-            for _, slot in pairs(vis.slots or {}) do
-                for _, pic in pairs(slot) do
-                    if pic.pictures then
-                        pic.pictures.scale = (pic.pictures.scale or 1) * This_MOD.new_scale
-                        if pic.pictures.shift then
-                            pic.pictures.shift = {
-                                (pic.pictures.shift[1] or 0) * This_MOD.new_scale,
-                                (pic.pictures.shift[2] or 0) * This_MOD.new_scale
-                            }
-                        end
-                    end
-                end
-            end
-        end
-    end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Escalar reflejo en agua
-    if entity.water_reflection and entity.water_reflection.pictures then
-        entity.water_reflection.pictures.scale =
-            (entity.water_reflection.pictures.scale or 1) * This_MOD.new_scale
-        if entity.water_reflection.pictures.shift then
-            entity.water_reflection.pictures.shift = {
-                (entity.water_reflection.pictures.shift[1] or 0) * This_MOD.new_scale,
-                (entity.water_reflection.pictures.shift[2] or 0) * This_MOD.new_scale
-            }
-        end
-    end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-GPrefix.var_dump(entity)
     --- Devolver la entidad
     return entity
 
