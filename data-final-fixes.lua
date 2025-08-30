@@ -218,7 +218,7 @@ function This_MOD.create_entity(space)
 
     --- Agregar los indicadores del mod
     table.insert(Entity.icons, This_MOD.indicator)
-    GPrefix.var_dump(Entity.icons)
+
     --- Cambiar el tamaño del icono
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
