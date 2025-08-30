@@ -41,11 +41,11 @@ function This_MOD.setting_mod()
     --- Tipos a afectar
     This_MOD.types = {
         ["furnace"] = This_MOD.is_furnace,
-        ["mining-drill"] = function (entity) end,
-        ["assembling-machine"] = function (entity) end,
-        ["radar"] = function (entity) end,
-        ["storage-tank"] = function (entity) end,
-        ["beacon"] = function (entity) end,
+        ["mining-drill"] = function(entity) end,
+        ["assembling-machine"] = function(entity) end,
+        ["radar"] = function(entity) end,
+        ["storage-tank"] = function(entity) end,
+        ["beacon"] = function(entity) end,
     }
 
     --- Escala a usar
@@ -62,7 +62,7 @@ function This_MOD.setting_mod()
         scale = 0.25,
         icon_size = 192,
         shift = { 0, 0 },
-        tint = {r=0, g=1, b=0}
+        tint = { r = 0, g = 1, b = 0 }
     }
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -218,7 +218,7 @@ function This_MOD.create_entity(space)
 
     --- Agregar los indicadores del mod
     table.insert(Entity.icons, This_MOD.indicator)
-GPrefix.var_dump(Entity.icons)
+    GPrefix.var_dump(Entity.icons)
     --- Cambiar el tamaño del icono
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
