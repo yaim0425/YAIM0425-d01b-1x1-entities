@@ -252,9 +252,9 @@ function This_MOD.create_entity()
         end
 
         --- Mover las conexiones
-        for _, Table in pairs(Connections) do
-            if Table.pipe_connections then
-                for _, conn in pairs(Table.pipe_connections) do
+        for _, conns in pairs(Connections) do
+            if conns.pipe_connections then
+                for _, conn in pairs(conns.pipe_connections or {}) do
                     if conn.position then
                         conn.position[1] = 0
                         conn.position[2] = 0
