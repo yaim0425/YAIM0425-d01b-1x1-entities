@@ -232,31 +232,29 @@ function This_MOD.create_entity()
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Contenedor 
-        local Fluid_boxes = {}
+        local Connections = {}
 
         --- Agrupar las conexiones a mover
         if Entity.fluid_boxes then
-            table.insert(Fluid_boxes, Entity.fluid_boxes)
+            table.insert(Connections, Entity.fluid_boxes)
         end
 
         if Entity.fluid_boxe then
-            table.insert(Fluid_boxes, Entity.fluid_boxe)
+            table.insert(Connections, Entity.fluid_boxe)
         end
 
         if Entity.energy_source.type == "fluid" then
-            table.insert(Fluid_boxes, Entity.energy_source.fluid_box)
+            table.insert(Connections, Entity.energy_source.fluid_box)
         end
 
         if Entity.energy_source.type == "heat" then
-            if Entity.energy_source.connections then
-                table.insert(Fluid_boxes, { pipe_connections = Entity.energy_source.connections })
-            end
+            table.insert(Connections, { pipe_connections = Entity.energy_source.connections })
         end
 
         --- Mover las conexiones
-        for _, Box in pairs(Fluid_boxes) do
-            if Box.pipe_connections then
-                for _, conn in pairs(Box.pipe_connections) do
+        for _, Table in pairs(Connections) do
+            if Table.pipe_connections then
+                for _, conn in pairs(Table.pipe_connections) do
                     if conn.position then
                         conn.position[1] = 0
                         conn.position[2] = 0
@@ -322,6 +320,8 @@ This_MOD.start()
 ---------------------------------------------------------------------------------------------------
 
 -- GPrefix.var_dump(This_MOD.new_entity)
+-- GPrefix.var_dump(This_MOD.entities)
+
 -- GPrefix.var_dump(This_MOD)
 -- ERROR()
 
