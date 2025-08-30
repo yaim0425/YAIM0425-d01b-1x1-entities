@@ -56,24 +56,14 @@ function This_MOD.setting_mod()
     This_MOD.selection_box = { { -0.5, -0.5 }, { 0.5, 0.5 } }
 
     --- Indicador del mod
-    local Indicator
-    This_MOD.indicator = {}
-
-    Indicator = data.raw["virtual-signal"]["up-right-arrow"].icons[1].icon
-    Indicator = { icon = Indicator, scale = 0.50, shift = { 0, -50 } }
-    table.insert(This_MOD.indicator, Indicator)
-
-    Indicator = data.raw["virtual-signal"]["down-right-arrow"].icons[1].icon
-    Indicator = { icon = Indicator, scale = 0.50, shift = { 0, -50 } }
-    table.insert(This_MOD.indicator, Indicator)
-
-    Indicator = data.raw["virtual-signal"]["up-left-arrow"].icons[1].icon
-    Indicator = { icon = Indicator, scale = 0.50, shift = { 0, -50 } }
-    table.insert(This_MOD.indicator, Indicator)
-
-    Indicator = data.raw["virtual-signal"]["down-left-arrow"].icons[1].icon
-    Indicator = { icon = Indicator, scale = 0.50, shift = { 0, -50 } }
-    table.insert(This_MOD.indicator, Indicator)
+    This_MOD.graphics = "__" .. This_MOD.prefix .. This_MOD.name .. "__/graphics/"
+    This_MOD.indicator = {
+        icon = This_MOD.graphics .. "indicator.png",
+        scale = 0.25,
+        icon_size = 192,
+        shift = { 0, 0 },
+        tint = {r=0, g=1, b=0}
+    }
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -223,6 +213,13 @@ function This_MOD.create_entity(space)
             end
         end
     end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Agregar los indicadores del mod
+    table.insert(Entity.icons, This_MOD.indicator)
+GPrefix.var_dump(Entity.icons)
+    --- Cambiar el tamaño del icono
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
