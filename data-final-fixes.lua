@@ -190,6 +190,10 @@ function This_MOD.create_entity()
             end
         end
 
+        if Entity.water_reflection then
+            This_MOD.change_scale(Entity.water_reflection.pictures)
+        end
+
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Escalar circuit connectors
@@ -325,19 +329,12 @@ function This_MOD.is_furnace(entity)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
+--- Faros
 function This_MOD.is_beacon(entity)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Validación
     if entity.fluid_boxes or entity.fluid_box then return end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -361,24 +358,6 @@ function This_MOD.is_beacon(entity)
                     end
                 end
             end
-        end
-    end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Escalar reflejo en agua
-    if entity.water_reflection and entity.water_reflection.pictures then
-        entity.water_reflection.pictures.scale =
-            (entity.water_reflection.pictures.scale or 1) * This_MOD.new_scale
-        if entity.water_reflection.pictures.shift then
-            entity.water_reflection.pictures.shift = {
-                (entity.water_reflection.pictures.shift[1] or 0) * This_MOD.new_scale,
-                (entity.water_reflection.pictures.shift[2] or 0) * This_MOD.new_scale
-            }
         end
     end
 
