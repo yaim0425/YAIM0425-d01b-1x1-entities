@@ -55,6 +55,11 @@ function This_MOD.setting_mod()
     This_MOD.collision_box = { { -0.3, -0.3 }, { 0.3, 0.3 } }
     This_MOD.selection_box = { { -0.5, -0.5 }, { 0.5, 0.5 } }
 
+    This_MOD.selection_box_str =
+        This_MOD.selection_box[1][1] .. " x " .. This_MOD.selection_box[1][2]
+        .. "   " ..
+        This_MOD.selection_box[2][1] .. " x " .. This_MOD.selection_box[2][2]
+
     --- Indicador del mod
     This_MOD.graphics = "__" .. This_MOD.prefix .. This_MOD.name .. "__/graphics/"
     This_MOD.indicator = {
@@ -121,15 +126,11 @@ function This_MOD.create_entity()
         local Entity = util.copy(space.entity)
 
         --- Verificar si la entidad es 1x1
-        local Box
-
-        Box = Entity.selection_box
-        local A = Box[1][1] .. " x " .. Box[1][2] .. "   " .. Box[2][1] .. " x " .. Box[2][2]
-
-        Box = This_MOD.selection_box
-        local B = Box[1][1] .. " x " .. Box[1][2] .. "   " .. Box[2][1] .. " x " .. Box[2][2]
-
-        if A == B then return end
+        local Selection_box_str =
+            Entity.selection_box[1][1] .. " x " .. Entity.selection_box[1][2]
+            .. "   " ..
+            Entity.selection_box[2][1] .. " x " .. Entity.selection_box[2][2]
+        if Selection_box_str == This_MOD.selection_box_str then return end
 
         --- Modificar según el tipo
         Entity = This_MOD.types[Entity.type](Entity)
