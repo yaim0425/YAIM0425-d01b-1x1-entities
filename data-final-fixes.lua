@@ -61,7 +61,6 @@ function This_MOD.setting_mod()
         icon = This_MOD.graphics .. "indicator.png",
         scale = 0.25,
         icon_size = 192,
-        shift = { 0, 0 },
         tint = { r = 0, g = 1, b = 0 }
     }
 
@@ -122,13 +121,15 @@ function This_MOD.create_entity()
         local Entity = util.copy(space.entity)
 
         --- Verificar si la entidad es 1x1
-        local Flag = true
-        for i = 1, 2, 1 do
-            for j = 1, 2, 1 do
-                Flag = Flag and Entity.selection_box[i][j] == This_MOD.selection_box[i][j]
-            end
-        end
-        if not Flag then return end
+        local Box
+
+        Box = Entity.selection_box
+        local A = Box[1][1] .. " x " .. Box[1][2] .. "   " .. Box[2][1] .. " x " .. Box[2][2]
+
+        Box = This_MOD.selection_box
+        local B = Box[1][1] .. " x " .. Box[1][2] .. "   " .. Box[2][1] .. " x " .. Box[2][2]
+
+        if A == B then return end
 
         --- Modificar según el tipo
         Entity = This_MOD.types[Entity.type](Entity)
