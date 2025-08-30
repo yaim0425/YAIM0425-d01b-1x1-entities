@@ -231,8 +231,10 @@ function This_MOD.create_entity()
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-        --- Mover las conexiones de liquidos y calor
+        --- Contenedor 
         local Fluid_boxes = {}
+
+        --- Agrupar las conexiones a mover
         if Entity.fluid_boxes then
             table.insert(Fluid_boxes, Entity.fluid_boxes)
         end
@@ -251,14 +253,13 @@ function This_MOD.create_entity()
             end
         end
 
-        if #Fluid_boxes > 0 then
-            for _, Box in pairs(Fluid_boxes) do
-                if Box.pipe_connections then
-                    for _, conn in pairs(Box.pipe_connections) do
-                        if conn.position then
-                            conn.position[1] = 0
-                            conn.position[2] = 0
-                        end
+        --- Mover las conexiones
+        for _, Box in pairs(Fluid_boxes) do
+            if Box.pipe_connections then
+                for _, conn in pairs(Box.pipe_connections) do
+                    if conn.position then
+                        conn.position[1] = 0
+                        conn.position[2] = 0
                     end
                 end
             end
