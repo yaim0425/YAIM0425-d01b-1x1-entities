@@ -57,7 +57,6 @@ function This_MOD.setting_mod()
         ["storage-tank"] = 1,
         ["beacon"] = 1,
     }
-    This_MOD.scale = 0.25
 
     --- Cajas a 1x1
     This_MOD.collision_box = { { -0.3, -0.3 }, { 0.3, 0.3 } }
@@ -162,7 +161,9 @@ function This_MOD.create_entity()
         local Width = Collision_box[2][1] - Collision_box[1][1]
         local Height = Collision_box[2][2] - Collision_box[1][2]
         This_MOD.new_scale = 1 / math.max(Width, Height)
-        -- This_MOD.new_scale = This_MOD.new_scale - This_MOD.scale * This_MOD.new_scale
+        This_MOD.new_scale =
+            This_MOD.new_scale -
+            This_MOD.scales[Entity.type] * This_MOD.new_scale
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -308,6 +309,12 @@ function This_MOD.is_furnace(entity)
     --- Validación
     if entity.fluid_boxes or entity.fluid_box then return end
 
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     --- Devolver la entidad
     return entity
 
@@ -320,8 +327,13 @@ function This_MOD.is_beacon(entity)
     --- Validación
     if entity.fluid_boxes or entity.fluid_box then return end
 
-    --- Escalar las imagenes
-    local Scale = This_MOD.new_scale - This_MOD.new_scale * 0.2
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Enlistar las imagenes
     local Animation = {}
 
     if entity.graphics_set and entity.graphics_set.animation_list then
@@ -336,9 +348,16 @@ function This_MOD.is_beacon(entity)
         table.insert(Animation, { animation = entity.base_picture })
     end
 
+    --- Cambiar la escala de las imagenes
     for _, value in pairs(Animation) do
-        This_MOD.change_scale(value.animation, Scale)
+        This_MOD.change_scale(value.animation)
     end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Escalar module visualisations
     if entity.graphics_set and entity.graphics_set.module_visualisations then
@@ -346,11 +365,11 @@ function This_MOD.is_beacon(entity)
             for _, slot in pairs(vis.slots or {}) do
                 for _, pic in pairs(slot) do
                     if pic.pictures then
-                        pic.pictures.scale = (pic.pictures.scale or 1) * Scale
+                        pic.pictures.scale = (pic.pictures.scale or 1) * This_MOD.new_scale
                         if pic.pictures.shift then
                             pic.pictures.shift = {
-                                (pic.pictures.shift[1] or 0) * Scale,
-                                (pic.pictures.shift[2] or 0) * Scale
+                                (pic.pictures.shift[1] or 0) * This_MOD.new_scale,
+                                (pic.pictures.shift[2] or 0) * This_MOD.new_scale
                             }
                         end
                     end
@@ -359,18 +378,31 @@ function This_MOD.is_beacon(entity)
         end
     end
 
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     --- Escalar reflejo en agua
     if entity.water_reflection and entity.water_reflection.pictures then
         entity.water_reflection.pictures.scale =
-            (entity.water_reflection.pictures.scale or 1) * Scale
+            (entity.water_reflection.pictures.scale or 1) * This_MOD.new_scale
         if entity.water_reflection.pictures.shift then
             entity.water_reflection.pictures.shift = {
-                (entity.water_reflection.pictures.shift[1] or 0) * Scale,
-                (entity.water_reflection.pictures.shift[2] or 0) * Scale
+                (entity.water_reflection.pictures.shift[1] or 0) * This_MOD.new_scale,
+                (entity.water_reflection.pictures.shift[2] or 0) * This_MOD.new_scale
             }
         end
     end
-    GPrefix.var_dump(entity)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+GPrefix.var_dump(entity)
     --- Devolver la entidad
     return entity
 
