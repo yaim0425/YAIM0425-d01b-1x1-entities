@@ -129,6 +129,15 @@ function This_MOD.create_entity(space)
     --- Duplicar la entidad
     local Entity = util.copy(space.entity)
 
+    --- Verificar si la entidad es 1x1
+    local Flag = true
+    for i = 1, 2, 1 do
+        for j = 1, 2, 1 do
+            Flag = Flag and Entity.selection_box[i][j] == This_MOD.selection_box[i][j]
+        end
+    end
+    if not Flag then return end
+
     --- Modificar según el tipo
     Entity = This_MOD.types[Entity.type](Entity)
 
@@ -271,15 +280,6 @@ function This_MOD.is_furnace(entity)
 
     --- Validación
     if entity.fluid_boxes or entity.fluid_box then return end
-
-    --- Verificar si la entidad es 1x1
-    local Flag = true
-    for i = 1, 2, 1 do
-        for j = 1, 2, 1 do
-            Flag = Flag and entity.selection_box[i][j] == This_MOD.selection_box[i][j]
-        end
-    end
-    if not Flag then return end
 
     --- Devolver la entidad
     return entity
