@@ -115,6 +115,35 @@ end
 function This_MOD.create_entity()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+    --- Cambia la scala de la entidad
+    local function change_scale(Table)
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        --- Validación
+        if not Table then return end
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        --- Estructura a modificar
+        if Table.layers then
+            for _, layer in pairs(Table.layers) do
+                layer.scale = (layer.scale or 1) * This_MOD.new_scale
+                if layer.shift then
+                    layer.shift[1] = layer.shift[1] * This_MOD.new_scale
+                    layer.shift[2] = layer.shift[2] * This_MOD.new_scale
+                end
+            end
+        else
+            Table.scale = (Table.scale or 1) * This_MOD.new_scale
+            if Table.shift then
+                Table.shift[1] = Table.shift[1] * This_MOD.new_scale
+                Table.shift[2] = Table.shift[2] * This_MOD.new_scale
+            end
+        end
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    end
+
     --- Crear la entidad deseada
     local function create_entity(space)
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -159,18 +188,18 @@ function This_MOD.create_entity()
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Revisar todas las animaciones
-        This_MOD.change_scale(Entity.animation)
-        This_MOD.change_scale(Entity.idle_animation)
-        This_MOD.change_scale(Entity.active_animation)
+        change_scale(Entity.animation)
+        change_scale(Entity.idle_animation)
+        change_scale(Entity.active_animation)
 
         --- Revisar todas las imagenes
         if Entity.graphics_set then
-            This_MOD.change_scale(Entity.graphics_set.animation)
-            This_MOD.change_scale(Entity.graphics_set.idle_animation)
-            This_MOD.change_scale(Entity.graphics_set.active_animation)
+            change_scale(Entity.graphics_set.animation)
+            change_scale(Entity.graphics_set.idle_animation)
+            change_scale(Entity.graphics_set.active_animation)
             if Entity.graphics_set.working_visualisations then
                 for _, vis in pairs(Entity.graphics_set.working_visualisations) do
-                    This_MOD.change_scale(vis.animation)
+                    change_scale(vis.animation)
                 end
             end
         end
@@ -246,37 +275,6 @@ function This_MOD.create_entity()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
-
---- Cambia la scala de la entidad
-function This_MOD.change_scale(Table)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Validación
-    if not Table then return end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Estructura a modificar
-    if Table.layers then
-        for _, layer in pairs(Table.layers) do
-            layer.scale = (layer.scale or 1) * This_MOD.new_scale
-            if layer.shift then
-                layer.shift[1] = layer.shift[1] * This_MOD.new_scale
-                layer.shift[2] = layer.shift[2] * This_MOD.new_scale
-            end
-        end
-    else
-        Table.scale = (Table.scale or 1) * This_MOD.new_scale
-        if Table.shift then
-            Table.shift[1] = Table.shift[1] * This_MOD.new_scale
-            Table.shift[2] = Table.shift[2] * This_MOD.new_scale
-        end
-    end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-end
-
----------------------------------------------------------------------------------------------------
 
 --- Hornos
 function This_MOD.is_furnace(entity)
