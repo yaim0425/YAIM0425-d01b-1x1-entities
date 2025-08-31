@@ -58,14 +58,6 @@ function This_MOD.setting_mod()
         ["beacon"] = 0.25,
     }
 
-    --- Direcciones
-    This_MOD.direction = {
-        defines.direction.west,
-        defines.direction.east,
-        defines.direction.north,
-        defines.direction.south
-    }
-
     --- Cajas a 1x1
     This_MOD.collision_box = { { -0.3, -0.3 }, { 0.3, 0.3 } }
     This_MOD.selection_box = { { -0.5, -0.5 }, { 0.5, 0.5 } }
@@ -187,6 +179,13 @@ function This_MOD.create_entity()
         --- Revisar todas las imagenes
         if Entity.graphics_set then
             This_MOD.change_scale(Entity.graphics_set.animation)
+            local keys = { "north", "east", "south", "west" }
+            if Entity.graphics_set.animation then
+                for _, key in pairs(keys) do
+                    This_MOD.change_scale(Entity.graphics_set.animation[key])
+                end
+            end
+
             This_MOD.change_scale(Entity.graphics_set.idle_animation)
             This_MOD.change_scale(Entity.graphics_set.active_animation)
 
@@ -199,9 +198,9 @@ function This_MOD.create_entity()
             end
 
             if Entity.graphics_set.working_visualisations then
-                local keys = { "north_position", "east_position", "south_position", "west_position" }
                 for _, vis in pairs(Entity.graphics_set.working_visualisations) do
                     for _, key in pairs(keys) do
+                        key = key .. "_position"
                         if vis[key] then
                             if vis[key][1] == 0 and vis[key][2] == 0 then
                                 vis[key] = nil
@@ -271,17 +270,48 @@ function This_MOD.create_entity()
             table.insert(Connections, { pipe_connections = Entity.energy_source.connections })
         end
 
-        --- Mover las conexiones
-        local Direction = 0
+        --- Prioridades (inversa → derecha → izquierda)
+        local function get_alternatives(dir)
+            if dir == defines.direction.north then
+                return { defines.direction.south, defines.direction.east, defines.direction.west }
+            elseif dir == defines.direction.south then
+                return { defines.direction.north, defines.direction.west, defines.direction.east }
+            elseif dir == defines.direction.east then
+                return { defines.direction.west, defines.direction.south, defines.direction.north }
+            elseif dir == defines.direction.west then
+                return { defines.direction.east, defines.direction.north, defines.direction.south }
+            end
+        end
+
+        --- Variables a usar
+        local used = {} --- direcciones ocupadas
+        local count = 0 --- contador de conexiones válidas
+
+        --- Ajustar conexiones
         for _, conns in pairs(Connections) do
             for _, conn in pairs(conns.pipe_connections or {}) do
-                Direction = Direction + 1
-                if Direction > 4 then return end
-                conn.direction = This_MOD.direction[Direction]
-                if conn.position then
-                    conn.position[1] = 0
-                    conn.position[2] = 0
+                if count >= 4 then return end
+                local dir = conn.direction or defines.direction.north
+
+                if not used[dir] then
+                    -- usar la dirección original
+                    used[dir] = true
+                    conn.direction = dir
+                    count = count + 1
+                else
+                    -- buscar alternativa
+                    for _, alt in ipairs(get_alternatives(dir)) do
+                        if not used[alt] then
+                            used[alt] = true
+                            conn.direction = alt
+                            count = count + 1
+                            break
+                        end
+                    end
                 end
+
+                -- siempre centrar en la tile
+                conn.position = { 0, 0 }
             end
         end
 
