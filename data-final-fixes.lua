@@ -138,6 +138,7 @@ function This_MOD.create_entity()
         local Collision_box = space.entity.collision_box
         local Width = Collision_box[2][1] - Collision_box[1][1]
         local Height = Collision_box[2][2] - Collision_box[1][2]
+        local Factor = { 1 / Width, 1 / Height }
         This_MOD.new_scale = 1 / math.max(Width, Height)
         This_MOD.new_scale =
             This_MOD.new_scale -
@@ -190,32 +191,17 @@ function This_MOD.create_entity()
             end
 
             if Entity.graphics_set.working_visualisations then
--- GPrefix.var_dump(
---     Entity.name,
---     space.entity.collision_box,
---     space.entity.selection_box,
---     space.entity.graphics_set.working_visualisations
--- )
                 local keys = { "north_position", "east_position", "south_position", "west_position" }
                 for _, vis in pairs(Entity.graphics_set.working_visualisations) do
-
--- GPrefix.var_dump(
---     Entity.name,
---     vis
--- )
-
                     for _, key in pairs(keys) do
                         if vis[key] then
                             if vis[key][1] == 0 and vis[key][2] == 0 then
-
--- GPrefix.var_dump(
---     key
--- )
-
                                 vis[key] = nil
                             else
-                                vis[key][1] = vis[key][1] * This_MOD.new_scale
-                                vis[key][2] = vis[key][2] * This_MOD.new_scale
+                                vis[key] = {
+                                    vis[key][1] * Factor[1],
+                                    vis[key][2] * Factor[2]
+                                }
                             end
                         end
                     end
