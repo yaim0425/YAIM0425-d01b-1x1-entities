@@ -115,26 +115,35 @@ function This_MOD.create_entity()
     --- Crear la entidad deseada
     local function create_entity(space)
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
         --- Validación
-        if not space.entity then return end
-        if space.entity.type == "mining-drill" then return end
-        if space.entity.type == "assembling-machine" then return end
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-        --- Duplicar la entidad
+        local Types = {
+            ["radar"] = true,
+            ["beacon"] = true,
+            ["furnace"] = true,
+            ["storage-tank"] = true,
+            ["mining-drill"] = true,
+            -- ["assembling-machine"] = true
+        }
+        if Types[space.entity.type] then return end
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Información importante
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        --- Valores a usar
         local Entity = util.copy(space.entity)
-
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-        --- Calcular escala base según tamaño original
         local Collision_box = space.entity.collision_box
         local Width = Collision_box[2][1] - Collision_box[1][1]
         local Height = Collision_box[2][2] - Collision_box[1][2]
         local Factor = { 1 / Width, 1 / Height }
+
+        --- Calcular escala base según tamaño original
         This_MOD.new_scale = 1 / math.max(Width, Height)
         This_MOD.new_scale =
             This_MOD.new_scale -
@@ -145,8 +154,9 @@ function This_MOD.create_entity()
 
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Evitar las entidades 1x1
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-        --- Verificar si la entidad es 1x1
         local Selection_box_str =
             Entity.selection_box[1][1] .. " x " .. Entity.selection_box[1][2]
             .. "   " ..
@@ -158,11 +168,43 @@ function This_MOD.create_entity()
 
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Salida de la prodicción
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+        if Entity.vector_to_place_result then
+            local X = Entity.vector_to_place_result[1]
+            local Y = Entity.vector_to_place_result[2]
+
+            -- Determinar hacia dónde apunta según el vector
+            if math.abs(X) > math.abs(Y) then
+                -- Horizontal
+                if X > 0 then
+                    Entity.vector_to_place_result = { 1, 0 }
+                else
+                    Entity.vector_to_place_result = { -1, 0 }
+                end
+            else
+                -- Vertical
+                if Y > 0 then
+                    Entity.vector_to_place_result = { 0, 1 }
+                else
+                    Entity.vector_to_place_result = { 0, -1 }
+                end
+            end
+        end
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
         --- Cambiar algunas propiedades
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
         Entity.name = This_MOD.prefix .. GPrefix.delete_prefix(Entity.name)
         Entity.next_upgrade = nil
         Entity.alert_icon_shift = nil
+        Entity.icon_draw_specification = nil
         Entity.collision_box = This_MOD.collision_box
         Entity.selection_box = This_MOD.selection_box
 
@@ -170,6 +212,8 @@ function This_MOD.create_entity()
 
 
 
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Escalar las imagenes
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Variable a usar
@@ -262,6 +306,8 @@ function This_MOD.create_entity()
 
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Conexiones de circuitos
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Escalar circuit connectors
         if Entity.circuit_connector then
@@ -290,6 +336,8 @@ function This_MOD.create_entity()
 
 
 
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Conexiones
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Contenedor
@@ -377,6 +425,8 @@ function This_MOD.create_entity()
 
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Icono del MOD
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Agregar los indicadores del mod
         table.insert(Entity.icons, This_MOD.indicator)
@@ -386,8 +436,10 @@ function This_MOD.create_entity()
 
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Crear el prototipo
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-        if Entity.name == This_MOD.prefix .. "py-tank-7000 " then
+        if Entity.name == This_MOD.prefix .. "pumpjack-mk0" then
             GPrefix.var_dump(Entity)
         end
 
@@ -460,4 +512,4 @@ This_MOD.start()
 -- GPrefix.var_dump(This_MOD.new_entity)
 
 -- GPrefix.var_dump(This_MOD)
--- ERROR()
+ERROR()
