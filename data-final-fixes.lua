@@ -40,23 +40,16 @@ function This_MOD.setting_mod()
 
     --- Tipos a afectar
     This_MOD.types = {
-        ["furnace"] = function(entity) return entity end,
-        ["mining-drill"] = function(entity) end,
-        ["assembling-machine"] = function(entity) end,
-        ["radar"] = function(entity) return entity end,
-        ["storage-tank"] = function(entity) return entity end,
-        ["beacon"] = function(entity) return entity end,
+        ["radar"] = true,
+        ["beacon"] = true,
+        ["furnace"] = true,
+        ["storage-tank"] = true,
+        ["mining-drill"] = true,
+        ["assembling-machine"] = true
     }
 
     --- Corrección en la escala
-    This_MOD.scales = {
-        ["furnace"] = 0.25,
-        ["mining-drill"] = 0.25,
-        ["assembling-machine"] = 0.25,
-        ["radar"] = 0.25,
-        ["storage-tank"] = 0.25,
-        ["beacon"] = 0.25,
-    }
+    This_MOD.scale = 0.25
 
     --- Cajas a 1x1
     This_MOD.collision_box = { { -0.3, -0.3 }, { 0.3, 0.3 } }
@@ -91,13 +84,10 @@ end
 function This_MOD.get_entities()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Variable a usar
-    local Space
-
     --- Buscar las entidades a afectar
     for _, entity in pairs(GPrefix.entities) do
         if This_MOD.types[entity.type] then
-            Space = {}
+            local Space = {}
             Space.item = GPrefix.get_item_create_entity(entity)
             if Space.item then
                 --- Valores para el proceso
@@ -128,9 +118,15 @@ function This_MOD.create_entity()
 
         --- Validación
         if not space.entity then return end
+        if space.entity.type == "mining-drill" then return end
+        if space.entity.type == "assembling-machine" then return end
 
         --- Duplicar la entidad
         local Entity = util.copy(space.entity)
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -142,7 +138,11 @@ function This_MOD.create_entity()
         This_MOD.new_scale = 1 / math.max(Width, Height)
         This_MOD.new_scale =
             This_MOD.new_scale -
-            This_MOD.scales[Entity.type] * This_MOD.new_scale
+            This_MOD.scale * This_MOD.new_scale
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -153,11 +153,9 @@ function This_MOD.create_entity()
             Entity.selection_box[2][1] .. " x " .. Entity.selection_box[2][2]
         if Selection_box_str == This_MOD.selection_box_str then return end
 
-        --- Modificar según el tipo
-        Entity = This_MOD.types[Entity.type](Entity)
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-        --- Validación
-        if not Entity then return end
+
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -170,19 +168,44 @@ function This_MOD.create_entity()
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        --- Variable a usar
+        local Directions = { "north", "east", "south", "west" }
+
         --- Revisar todas las animaciones
-        This_MOD.change_scale(Entity.pictures)
         This_MOD.change_scale(Entity.animation)
         This_MOD.change_scale(Entity.base_picture)
         This_MOD.change_scale(Entity.idle_animation)
         This_MOD.change_scale(Entity.active_animation)
         This_MOD.change_scale(Entity.integration_patch)
 
+        if Entity.pictures then
+            --- Elimnar lo inecesario
+            for _, value in pairs({ "fluid_background", "window_background", "flow_sprite", "gas_flow" }) do
+                Entity.pictures[value] = nil
+            end
+
+            --- Cambiar la escala de la imagen
+            This_MOD.change_scale(Entity.pictures)
+            if Entity.pictures.picture then
+                for _, value in pairs(Directions) do
+                    This_MOD.change_scale(Entity.pictures.picture[value])
+                end
+                if Entity.pictures.picture.sheets then
+                    This_MOD.change_scale({ layers = Entity.pictures.picture.sheets })
+                else
+                    This_MOD.change_scale(Entity.pictures.picture.sheet)
+                end
+            end
+        end
+
         --- Revisar todas las imagenes
         if Entity.graphics_set then
             This_MOD.change_scale(Entity.graphics_set.animation)
-            local Keys = { "north", "east", "south", "west" }
-            for _, Key in pairs(Entity.graphics_set.animation and Keys or {}) do
+            for _, Key in pairs(Entity.graphics_set.animation and Directions or {}) do
                 This_MOD.change_scale(Entity.graphics_set.animation[Key])
             end
 
@@ -206,7 +229,7 @@ function This_MOD.create_entity()
             end
 
             for _, vis in pairs(Entity.graphics_set.working_visualisations or {}) do
-                for _, key in pairs(Keys) do
+                for _, key in pairs(Directions) do
                     key = key .. "_position"
                     if vis[key] then
                         if vis[key][1] == 0 and vis[key][2] == 0 then
@@ -226,6 +249,10 @@ function This_MOD.create_entity()
         if Entity.water_reflection then
             This_MOD.change_scale(Entity.water_reflection.pictures)
         end
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -251,6 +278,10 @@ function This_MOD.create_entity()
                 end
             end
         end
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -336,12 +367,20 @@ function This_MOD.create_entity()
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
         --- Agregar los indicadores del mod
         table.insert(Entity.icons, This_MOD.indicator)
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-        if Entity.name == This_MOD.prefix .. "storage-tank" then
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        if Entity.name == This_MOD.prefix .. "py-tank-7000 " then
             GPrefix.var_dump(Entity)
         end
 
