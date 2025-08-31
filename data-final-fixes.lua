@@ -32,7 +32,6 @@ function This_MOD.start()
         end
     end
 
-
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
@@ -180,17 +179,43 @@ function This_MOD.create_entity(space)
         if math.abs(X) > math.abs(Y) then
             -- Horizontal
             if X > 0 then
-                Entity.vector_to_place_result = { 1, 0 }
+                Entity.vector_to_place_result = { 0.9, 0 }
             else
-                Entity.vector_to_place_result = { -1, 0 }
+                Entity.vector_to_place_result = { -0.9, 0 }
             end
         else
             -- Vertical
             if Y > 0 then
-                Entity.vector_to_place_result = { 0, 1 }
+                Entity.vector_to_place_result = { 0, 0.9 }
             else
-                Entity.vector_to_place_result = { 0, -1 }
+                Entity.vector_to_place_result = { 0, -0.9 }
             end
+        end
+    end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Mover el are afectada
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    if Entity.radius_visualisation_specification then
+
+        --- Valores a usar
+        local spec = Entity.radius_visualisation_specification
+        local dir = Entity.place_direction or defines.direction.north
+
+        --- Mover el area
+        if dir == defines.direction.north then
+            spec.offset = { 0, -spec.distance }
+        elseif dir == defines.direction.south then
+            spec.offset = { 0, spec.distance }
+        elseif dir == defines.direction.east then
+            spec.offset = { spec.distance, 0 }
+        elseif dir == defines.direction.west then
+            spec.offset = { -spec.distance, 0 }
         end
     end
 
@@ -440,7 +465,9 @@ function This_MOD.create_entity(space)
     --- Crear el prototipo
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    if Entity.name == This_MOD.prefix .. "pumpjack-mk0" then
+    if Entity.name == This_MOD.prefix .. "dino-dig-site " then
+        -- if Entity.name == This_MOD.prefix .. "pumpjack-mk01" then
+        GPrefix.var_dump(space.entity)
         GPrefix.var_dump(Entity)
     end
 
