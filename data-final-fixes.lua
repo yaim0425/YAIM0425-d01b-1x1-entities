@@ -40,12 +40,12 @@ function This_MOD.setting_mod()
 
     --- Tipos a afectar
     This_MOD.types = {
-        ["furnace"] = This_MOD.is_furnace,
+        ["furnace"] = function(entity) return entity end,
         ["mining-drill"] = function(entity) end,
         ["assembling-machine"] = function(entity) end,
-        ["radar"] = This_MOD.is_radar,
-        ["storage-tank"] = function(entity) end,
-        ["beacon"] = This_MOD.is_beacon,
+        ["radar"] = function(entity) return entity end,
+        ["storage-tank"] = function(entity) return entity end,
+        ["beacon"] = function(entity) return entity end,
     }
 
     --- Corrección en la escala
@@ -181,11 +181,9 @@ function This_MOD.create_entity()
         --- Revisar todas las imagenes
         if Entity.graphics_set then
             This_MOD.change_scale(Entity.graphics_set.animation)
-            local keys = { "north", "east", "south", "west" }
-            if Entity.graphics_set.animation then
-                for _, key in pairs(keys) do
-                    This_MOD.change_scale(Entity.graphics_set.animation[key])
-                end
+            local Keys = { "north", "east", "south", "west" }
+            for _, Key in pairs(Entity.graphics_set.animation and Keys or {}) do
+                This_MOD.change_scale(Entity.graphics_set.animation[Key])
             end
 
             This_MOD.change_scale(Entity.graphics_set.idle_animation)
@@ -199,23 +197,29 @@ function This_MOD.create_entity()
                 This_MOD.change_scale(Entity.graphics_set.water_reflection.pictures)
             end
 
-            if Entity.graphics_set.working_visualisations then
-                for _, vis in pairs(Entity.graphics_set.working_visualisations) do
-                    for _, key in pairs(keys) do
-                        key = key .. "_position"
-                        if vis[key] then
-                            if vis[key][1] == 0 and vis[key][2] == 0 then
-                                vis[key] = nil
-                            else
-                                vis[key] = {
-                                    vis[key][1] * Factor[1],
-                                    vis[key][2] * Factor[2]
-                                }
-                            end
+            for _, vis in pairs(Entity.graphics_set.module_visualisations or {}) do
+                for _, slot in pairs(vis.slots or {}) do
+                    for _, pic in pairs(slot) do
+                        This_MOD.change_scale(pic.pictures)
+                    end
+                end
+            end
+
+            for _, vis in pairs(Entity.graphics_set.working_visualisations or {}) do
+                for _, key in pairs(Keys) do
+                    key = key .. "_position"
+                    if vis[key] then
+                        if vis[key][1] == 0 and vis[key][2] == 0 then
+                            vis[key] = nil
+                        else
+                            vis[key] = {
+                                vis[key][1] * Factor[1],
+                                vis[key][2] * Factor[2]
+                            }
                         end
                     end
-                    This_MOD.change_scale(vis.animation)
                 end
+                This_MOD.change_scale(vis.animation)
             end
         end
 
@@ -260,16 +264,18 @@ function This_MOD.create_entity()
             end
         end
 
-        if Entity.fluid_boxe then
-            table.insert(Connections, { Entity.fluid_boxe })
+        if Entity.fluid_box then
+            table.insert(Connections, Entity.fluid_box)
         end
 
-        if Entity.energy_source.type == "fluid" then
-            table.insert(Connections, Entity.energy_source.fluid_box)
-        end
+        if Entity.energy_source then
+            if Entity.energy_source.type == "fluid" then
+                table.insert(Connections, Entity.energy_source.fluid_box)
+            end
 
-        if Entity.energy_source.type == "heat" then
-            table.insert(Connections, { pipe_connections = Entity.energy_source.connections })
+            if Entity.energy_source.type == "heat" then
+                table.insert(Connections, { pipe_connections = Entity.energy_source.connections })
+            end
         end
 
         --- Prioridad (Inversa → Derecha → Izquierda)
@@ -335,6 +341,10 @@ function This_MOD.create_entity()
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+        if Entity.name == This_MOD.prefix .. "storage-tank" then
+            GPrefix.var_dump(Entity)
+        end
+
         --- Crear el prototipo
         GPrefix.extend(Entity)
 
@@ -383,53 +393,6 @@ function This_MOD.change_scale(images)
             images.shift[2] = images.shift[2] * This_MOD.new_scale
         end
     end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-end
-
---- Hornos
-function This_MOD.is_furnace(entity)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Devolver la entidad
-    return entity
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-end
-
---- Faros
-function This_MOD.is_beacon(entity)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Escalar module visualisations
-    if entity.graphics_set then
-        for _, vis in pairs(entity.graphics_set.module_visualisations or {}) do
-            for _, slot in pairs(vis.slots or {}) do
-                for _, pic in pairs(slot) do
-                    This_MOD.change_scale(pic.pictures)
-                end
-            end
-        end
-    end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Devolver la entidad
-    return entity
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-end
-
---- Radar
-function This_MOD.is_radar(entity)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Devolver la entidad
-    return entity
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
