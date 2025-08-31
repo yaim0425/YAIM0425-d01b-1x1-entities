@@ -254,11 +254,13 @@ function This_MOD.create_entity()
 
         --- Agrupar las conexiones a mover
         if Entity.fluid_boxes then
-            table.insert(Connections, Entity.fluid_boxes)
+            for _, box in pairs(Entity.fluid_boxes) do
+                table.insert(Connections, box)
+            end
         end
 
         if Entity.fluid_boxe then
-            table.insert(Connections, Entity.fluid_boxe)
+            table.insert(Connections, { Entity.fluid_boxe })
         end
 
         if Entity.energy_source.type == "fluid" then
@@ -270,10 +272,12 @@ function This_MOD.create_entity()
         end
 
         --- Mover las conexiones
+        local Direction = 0
         for _, conns in pairs(Connections) do
-            for i, conn in pairs(conns.pipe_connections or {}) do
-                if i > 4 then return end
-                conn.direction = This_MOD.direction[i]
+            for _, conn in pairs(conns.pipe_connections or {}) do
+                Direction = Direction + 1
+                if Direction > 4 then return end
+                conn.direction = This_MOD.direction[Direction]
                 if conn.position then
                     conn.position[1] = 0
                     conn.position[2] = 0
