@@ -25,8 +25,13 @@ function This_MOD.start()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Crear la entidad deseada
-    This_MOD.create_entity()
+    --- Recorrer las entidades filtrada
+    for _, spaces in pairs(This_MOD.entities) do
+        for _, space in pairs(spaces) do
+            This_MOD.create_entity(space)
+        end
+    end
+
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -109,359 +114,343 @@ end
 ---------------------------------------------------------------------------------------------------
 
 --- Crear la entidad deseada
-function This_MOD.create_entity()
+function This_MOD.create_entity(space)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Validación
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Crear la entidad deseada
-    local function create_entity(space)
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-        --- Validación
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    local Types = {
+        ["radar"] = true,
+        ["beacon"] = true,
+        ["furnace"] = true,
+        ["storage-tank"] = true,
+        ["mining-drill"] = true,
+        -- ["assembling-machine"] = true
+    }
+    if Types[space.entity.type] then return end
 
-        local Types = {
-            ["radar"] = true,
-            ["beacon"] = true,
-            ["furnace"] = true,
-            ["storage-tank"] = true,
-            ["mining-drill"] = true,
-            -- ["assembling-machine"] = true
-        }
-        if Types[space.entity.type] then return end
-
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 
 
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-        --- Información importante
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Información importante
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-        --- Valores a usar
-        local Entity = util.copy(space.entity)
-        local Collision_box = space.entity.collision_box
-        local Width = Collision_box[2][1] - Collision_box[1][1]
-        local Height = Collision_box[2][2] - Collision_box[1][2]
-        local Factor = { 1 / Width, 1 / Height }
+    --- Valores a usar
+    local Entity = util.copy(space.entity)
+    local Collision_box = space.entity.collision_box
+    local Width = Collision_box[2][1] - Collision_box[1][1]
+    local Height = Collision_box[2][2] - Collision_box[1][2]
+    local Factor = { 1 / Width, 1 / Height }
 
-        --- Calcular escala base según tamaño original
-        This_MOD.new_scale = 1 / math.max(Width, Height)
-        This_MOD.new_scale =
-            This_MOD.new_scale -
-            This_MOD.scale * This_MOD.new_scale
+    --- Calcular escala base según tamaño original
+    This_MOD.new_scale = 1 / math.max(Width, Height)
+    This_MOD.new_scale =
+        This_MOD.new_scale -
+        This_MOD.scale * This_MOD.new_scale
 
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-        --- Evitar las entidades 1x1
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-        local Selection_box_str =
-            Entity.selection_box[1][1] .. " x " .. Entity.selection_box[1][2]
-            .. "   " ..
-            Entity.selection_box[2][1] .. " x " .. Entity.selection_box[2][2]
-        if Selection_box_str == This_MOD.selection_box_str then return end
-
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 
 
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-        --- Salida de la prodicción
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Evitar las entidades 1x1
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-        if Entity.vector_to_place_result then
-            local X = Entity.vector_to_place_result[1]
-            local Y = Entity.vector_to_place_result[2]
+    local Selection_box_str =
+        Entity.selection_box[1][1] .. " x " .. Entity.selection_box[1][2]
+        .. "   " ..
+        Entity.selection_box[2][1] .. " x " .. Entity.selection_box[2][2]
+    if Selection_box_str == This_MOD.selection_box_str then return end
 
-            -- Determinar hacia dónde apunta según el vector
-            if math.abs(X) > math.abs(Y) then
-                -- Horizontal
-                if X > 0 then
-                    Entity.vector_to_place_result = { 1, 0 }
-                else
-                    Entity.vector_to_place_result = { -1, 0 }
-                end
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Salida de la prodicción
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    if Entity.vector_to_place_result then
+        local X = Entity.vector_to_place_result[1]
+        local Y = Entity.vector_to_place_result[2]
+
+        -- Determinar hacia dónde apunta según el vector
+        if math.abs(X) > math.abs(Y) then
+            -- Horizontal
+            if X > 0 then
+                Entity.vector_to_place_result = { 1, 0 }
             else
-                -- Vertical
-                if Y > 0 then
-                    Entity.vector_to_place_result = { 0, 1 }
-                else
-                    Entity.vector_to_place_result = { 0, -1 }
-                end
+                Entity.vector_to_place_result = { -1, 0 }
+            end
+        else
+            -- Vertical
+            if Y > 0 then
+                Entity.vector_to_place_result = { 0, 1 }
+            else
+                Entity.vector_to_place_result = { 0, -1 }
             end
         end
-
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-        --- Cambiar algunas propiedades
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-        Entity.name = This_MOD.prefix .. GPrefix.delete_prefix(Entity.name)
-        Entity.next_upgrade = nil
-        Entity.alert_icon_shift = nil
-        Entity.icon_draw_specification = nil
-        Entity.collision_box = This_MOD.collision_box
-        Entity.selection_box = This_MOD.selection_box
-
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-        --- Escalar las imagenes
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-        --- Variable a usar
-        local Directions = { "north", "east", "south", "west" }
-
-        --- Revisar todas las animaciones
-        This_MOD.change_scale(Entity.animation)
-        This_MOD.change_scale(Entity.base_picture)
-        This_MOD.change_scale(Entity.idle_animation)
-        This_MOD.change_scale(Entity.active_animation)
-        This_MOD.change_scale(Entity.integration_patch)
-
-        if Entity.pictures then
-            --- Elimnar lo inecesario
-            for _, value in pairs({ "fluid_background", "window_background", "flow_sprite", "gas_flow" }) do
-                Entity.pictures[value] = nil
-            end
-
-            --- Cambiar la escala de la imagen
-            This_MOD.change_scale(Entity.pictures)
-            if Entity.pictures.picture then
-                local Picture = Entity.pictures.picture
-
-                --- Diecciones a validar
-                for _, value in pairs(Directions) do
-                    This_MOD.change_scale(Picture[value])
-                end
-
-                --- Cambiar la escala
-                if Picture.sheets then
-                    This_MOD.change_scale({ layers = Picture.sheets })
-                else
-                    This_MOD.change_scale(Picture.sheet)
-                end
-            end
-        end
-
-        --- Revisar todas las imagenes
-        if Entity.graphics_set then
-            local Graphics = Entity.graphics_set
-
-            This_MOD.change_scale(Graphics.animation)
-            for _, Key in pairs(Graphics.animation and Directions or {}) do
-                This_MOD.change_scale(Graphics.animation[Key])
-            end
-
-            This_MOD.change_scale(Graphics.idle_animation)
-            This_MOD.change_scale(Graphics.active_animation)
-
-            for _, vis in pairs(Graphics.animation_list or {}) do
-                This_MOD.change_scale(vis.animation)
-            end
-
-            if Graphics.water_reflection then
-                This_MOD.change_scale(Graphics.water_reflection.pictures)
-            end
-
-            for _, vis in pairs(Graphics.module_visualisations or {}) do
-                for _, slot in pairs(vis.slots or {}) do
-                    for _, pic in pairs(slot) do
-                        This_MOD.change_scale(pic.pictures)
-                    end
-                end
-            end
-
-            for _, vis in pairs(Graphics.working_visualisations or {}) do
-                for _, key in pairs(Directions) do
-                    key = key .. "_position"
-                    if vis[key] then
-                        if vis[key][1] == 0 and vis[key][2] == 0 then
-                            vis[key] = nil
-                        else
-                            vis[key] = {
-                                vis[key][1] * Factor[1],
-                                vis[key][2] * Factor[2]
-                            }
-                        end
-                    end
-                end
-                This_MOD.change_scale(vis.animation)
-            end
-        end
-
-        if Entity.water_reflection then
-            This_MOD.change_scale(Entity.water_reflection.pictures)
-        end
-
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-        --- Conexiones de circuitos
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-        --- Escalar circuit connectors
-        if Entity.circuit_connector then
-            for _, connector in pairs(Entity.circuit_connector) do
-                if connector.sprites then
-                    for _, spr in pairs(connector.sprites) do
-                        if spr.scale then spr.scale = spr.scale * This_MOD.new_scale end
-                        if spr.shift then
-                            spr.shift[1] = spr.shift[1] * This_MOD.new_scale
-                            spr.shift[2] = spr.shift[2] * This_MOD.new_scale
-                        end
-                    end
-                end
-                if connector.points then
-                    for _, side in pairs(connector.points) do
-                        for _, pos in pairs(side) do
-                            pos[1] = pos[1] * This_MOD.new_scale
-                            pos[2] = pos[2] * This_MOD.new_scale
-                        end
-                    end
-                end
-            end
-        end
-
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-        --- Conexiones
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-        --- Contenedor
-        local Connections = {}
-
-        --- Agrupar las conexiones a mover
-        if Entity.fluid_boxes then
-            for _, box in pairs(Entity.fluid_boxes) do
-                table.insert(Connections, box)
-            end
-        end
-
-        if Entity.fluid_box then
-            table.insert(Connections, Entity.fluid_box)
-        end
-
-        if Entity.energy_source then
-            if Entity.energy_source.type == "fluid" then
-                table.insert(Connections, Entity.energy_source.fluid_box)
-            end
-
-            if Entity.energy_source.type == "heat" then
-                table.insert(Connections, { pipe_connections = Entity.energy_source.connections })
-            end
-        end
-
-        --- Prioridad (Inversa → Derecha → Izquierda)
-        local Priority = {
-            [defines.direction.north] = {
-                defines.direction.south,
-                defines.direction.east,
-                defines.direction.west
-            },
-            [defines.direction.south] = {
-                defines.direction.north,
-                defines.direction.west,
-                defines.direction.east
-            },
-            [defines.direction.east] = {
-                defines.direction.west,
-                defines.direction.south,
-                defines.direction.north
-            },
-            [defines.direction.west] = {
-                defines.direction.east,
-                defines.direction.north,
-                defines.direction.south
-            }
-        }
-
-        --- Variables a usar
-        local Used = {} --- Direcciones ocupadas
-        local Count = 1 --- Contador de conexiones válidas
-
-        --- Ajustar conexiones
-        for _, conns in pairs(Connections) do
-            for _, conn in pairs(conns.pipe_connections or {}) do
-                if Count > 4 then return end
-                local Dir = conn.direction or defines.direction.north
-
-                if not Used[Dir] then
-                    -- Usar la dirección original
-                    Used[Dir] = true
-                    conn.direction = Dir
-                    Count = Count + 1
-                else
-                    -- Buscar alternativa
-                    for _, alt in ipairs(Priority[Dir]) do
-                        if not Used[alt] then
-                            Used[alt] = true
-                            conn.direction = alt
-                            Count = Count + 1
-                            break
-                        end
-                    end
-                end
-
-                -- siempre centrar en la tile
-                conn.position = { 0, 0 }
-            end
-        end
-
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-        --- Icono del MOD
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-        --- Agregar los indicadores del mod
-        table.insert(Entity.icons, This_MOD.indicator)
-
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-        --- Crear el prototipo
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-        if Entity.name == This_MOD.prefix .. "pumpjack-mk0" then
-            GPrefix.var_dump(Entity)
-        end
-
-        --- Crear el prototipo
-        GPrefix.extend(Entity)
-
-        --- Guardar el prototipo
-        This_MOD.new_entity = This_MOD.new_entity or {}
-        This_MOD.new_entity[Entity.type] = This_MOD.new_entity[Entity.type] or {}
-        This_MOD.new_entity[Entity.type][Entity.name] = Entity
-
-        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Recorrer las entidades filtrada
-    for _, spaces in pairs(This_MOD.entities) do
-        for _, space in pairs(spaces) do
-            create_entity(space)
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Cambiar algunas propiedades
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    Entity.name = This_MOD.prefix .. GPrefix.delete_prefix(Entity.name)
+    Entity.next_upgrade = nil
+    Entity.alert_icon_shift = nil
+    Entity.icon_draw_specification = nil
+    Entity.collision_box = This_MOD.collision_box
+    Entity.selection_box = This_MOD.selection_box
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Escalar las imagenes
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Variable a usar
+    local Directions = { "north", "east", "south", "west" }
+
+    --- Revisar todas las animaciones
+    This_MOD.change_scale(Entity.animation)
+    This_MOD.change_scale(Entity.base_picture)
+    This_MOD.change_scale(Entity.idle_animation)
+    This_MOD.change_scale(Entity.active_animation)
+    This_MOD.change_scale(Entity.integration_patch)
+
+    if Entity.pictures then
+        --- Elimnar lo inecesario
+        for _, value in pairs({ "fluid_background", "window_background", "flow_sprite", "gas_flow" }) do
+            Entity.pictures[value] = nil
+        end
+
+        --- Cambiar la escala de la imagen
+        This_MOD.change_scale(Entity.pictures)
+        if Entity.pictures.picture then
+            local Picture = Entity.pictures.picture
+
+            --- Diecciones a validar
+            for _, value in pairs(Directions) do
+                This_MOD.change_scale(Picture[value])
+            end
+
+            --- Cambiar la escala
+            if Picture.sheets then
+                This_MOD.change_scale({ layers = Picture.sheets })
+            else
+                This_MOD.change_scale(Picture.sheet)
+            end
         end
     end
+
+    --- Revisar todas las imagenes
+    if Entity.graphics_set then
+        local Graphics = Entity.graphics_set
+
+        This_MOD.change_scale(Graphics.animation)
+        for _, Key in pairs(Graphics.animation and Directions or {}) do
+            This_MOD.change_scale(Graphics.animation[Key])
+        end
+
+        This_MOD.change_scale(Graphics.idle_animation)
+        This_MOD.change_scale(Graphics.active_animation)
+
+        for _, vis in pairs(Graphics.animation_list or {}) do
+            This_MOD.change_scale(vis.animation)
+        end
+
+        if Graphics.water_reflection then
+            This_MOD.change_scale(Graphics.water_reflection.pictures)
+        end
+
+        for _, vis in pairs(Graphics.module_visualisations or {}) do
+            for _, slot in pairs(vis.slots or {}) do
+                for _, pic in pairs(slot) do
+                    This_MOD.change_scale(pic.pictures)
+                end
+            end
+        end
+
+        for _, vis in pairs(Graphics.working_visualisations or {}) do
+            for _, key in pairs(Directions) do
+                key = key .. "_position"
+                if vis[key] then
+                    if vis[key][1] == 0 and vis[key][2] == 0 then
+                        vis[key] = nil
+                    else
+                        vis[key] = {
+                            vis[key][1] * Factor[1],
+                            vis[key][2] * Factor[2]
+                        }
+                    end
+                end
+            end
+            This_MOD.change_scale(vis.animation)
+        end
+    end
+
+    if Entity.water_reflection then
+        This_MOD.change_scale(Entity.water_reflection.pictures)
+    end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Conexiones de circuitos
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Escalar circuit connectors
+    if Entity.circuit_connector then
+        for _, connector in pairs(Entity.circuit_connector) do
+            if connector.sprites then
+                for _, spr in pairs(connector.sprites) do
+                    if spr.scale then spr.scale = spr.scale * This_MOD.new_scale end
+                    if spr.shift then
+                        spr.shift[1] = spr.shift[1] * This_MOD.new_scale
+                        spr.shift[2] = spr.shift[2] * This_MOD.new_scale
+                    end
+                end
+            end
+            if connector.points then
+                for _, side in pairs(connector.points) do
+                    for _, pos in pairs(side) do
+                        pos[1] = pos[1] * This_MOD.new_scale
+                        pos[2] = pos[2] * This_MOD.new_scale
+                    end
+                end
+            end
+        end
+    end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Conexiones
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Contenedor
+    local Connections = {}
+
+    --- Agrupar las conexiones a mover
+    if Entity.fluid_boxes then
+        for _, box in pairs(Entity.fluid_boxes) do
+            table.insert(Connections, box)
+        end
+    end
+
+    if Entity.fluid_box then
+        table.insert(Connections, Entity.fluid_box)
+    end
+
+    if Entity.energy_source then
+        if Entity.energy_source.type == "fluid" then
+            table.insert(Connections, Entity.energy_source.fluid_box)
+        end
+
+        if Entity.energy_source.type == "heat" then
+            table.insert(Connections, { pipe_connections = Entity.energy_source.connections })
+        end
+    end
+
+    --- Prioridad (Inversa → Derecha → Izquierda)
+    local Priority = {
+        [defines.direction.north] = {
+            defines.direction.south,
+            defines.direction.east,
+            defines.direction.west
+        },
+        [defines.direction.south] = {
+            defines.direction.north,
+            defines.direction.west,
+            defines.direction.east
+        },
+        [defines.direction.east] = {
+            defines.direction.west,
+            defines.direction.south,
+            defines.direction.north
+        },
+        [defines.direction.west] = {
+            defines.direction.east,
+            defines.direction.north,
+            defines.direction.south
+        }
+    }
+
+    --- Variables a usar
+    local Used = {} --- Direcciones ocupadas
+    local Count = 1 --- Contador de conexiones válidas
+
+    --- Ajustar conexiones
+    for _, conns in pairs(Connections) do
+        for _, conn in pairs(conns.pipe_connections or {}) do
+            if Count > 4 then return end
+            local Dir = conn.direction or defines.direction.north
+
+            if not Used[Dir] then
+                -- Usar la dirección original
+                Used[Dir] = true
+                conn.direction = Dir
+                Count = Count + 1
+            else
+                -- Buscar alternativa
+                for _, alt in ipairs(Priority[Dir]) do
+                    if not Used[alt] then
+                        Used[alt] = true
+                        conn.direction = alt
+                        Count = Count + 1
+                        break
+                    end
+                end
+            end
+
+            -- siempre centrar en la tile
+            conn.position = { 0, 0 }
+        end
+    end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Icono del MOD
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Agregar los indicadores del mod
+    table.insert(Entity.icons, This_MOD.indicator)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Crear el prototipo
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    if Entity.name == This_MOD.prefix .. "pumpjack-mk0" then
+        GPrefix.var_dump(Entity)
+    end
+
+    --- Crear el prototipo
+    GPrefix.extend(Entity)
+
+    --- Guardar el prototipo
+    This_MOD.new_entity = This_MOD.new_entity or {}
+    This_MOD.new_entity[Entity.type] = This_MOD.new_entity[Entity.type] or {}
+    This_MOD.new_entity[Entity.type][Entity.name] = Entity
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -512,4 +501,4 @@ This_MOD.start()
 -- GPrefix.var_dump(This_MOD.new_entity)
 
 -- GPrefix.var_dump(This_MOD)
-ERROR()
+-- ERROR()
