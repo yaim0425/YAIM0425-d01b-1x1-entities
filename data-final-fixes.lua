@@ -43,7 +43,7 @@ function This_MOD.setting_mod()
         ["furnace"] = This_MOD.is_furnace,
         ["mining-drill"] = function(entity) end,
         ["assembling-machine"] = function(entity) end,
-        ["radar"] = function(entity) end,
+        ["radar"] = This_MOD.is_radar,
         ["storage-tank"] = function(entity) end,
         ["beacon"] = This_MOD.is_beacon,
     }
@@ -403,6 +403,16 @@ function This_MOD.is_beacon(entity)
 
 
 
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Devolver la entidad
+    return entity
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+--- Radar
+function This_MOD.is_radar(entity)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Devolver la entidad
