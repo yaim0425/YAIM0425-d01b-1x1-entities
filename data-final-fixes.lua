@@ -51,10 +51,10 @@ function This_MOD.setting_mod()
     --- Corrección en la escala
     This_MOD.scales = {
         ["furnace"] = 0.25,
-        ["mining-drill"] = 1,
-        ["assembling-machine"] = 1,
-        ["radar"] = 1,
-        ["storage-tank"] = 1,
+        ["mining-drill"] = 0.25,
+        ["assembling-machine"] = 0.25,
+        ["radar"] = 0.25,
+        ["storage-tank"] = 0.25,
         ["beacon"] = 0.25,
     }
 
