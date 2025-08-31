@@ -180,11 +180,45 @@ function This_MOD.create_entity()
             This_MOD.change_scale(Entity.graphics_set.animation)
             This_MOD.change_scale(Entity.graphics_set.idle_animation)
             This_MOD.change_scale(Entity.graphics_set.active_animation)
+
             for _, vis in pairs(Entity.graphics_set.animation_list or {}) do
                 This_MOD.change_scale(vis.animation)
             end
+
+            if Entity.graphics_set.water_reflection then
+                This_MOD.change_scale(Entity.graphics_set.water_reflection.pictures)
+            end
+
             if Entity.graphics_set.working_visualisations then
+-- GPrefix.var_dump(
+--     Entity.name,
+--     space.entity.collision_box,
+--     space.entity.selection_box,
+--     space.entity.graphics_set.working_visualisations
+-- )
+                local keys = { "north_position", "east_position", "south_position", "west_position" }
                 for _, vis in pairs(Entity.graphics_set.working_visualisations) do
+
+-- GPrefix.var_dump(
+--     Entity.name,
+--     vis
+-- )
+
+                    for _, key in pairs(keys) do
+                        if vis[key] then
+                            if vis[key][1] == 0 and vis[key][2] == 0 then
+
+-- GPrefix.var_dump(
+--     key
+-- )
+
+                                vis[key] = nil
+                            else
+                                vis[key][1] = vis[key][1] * This_MOD.new_scale
+                                vis[key][2] = vis[key][2] * This_MOD.new_scale
+                            end
+                        end
+                    end
                     This_MOD.change_scale(vis.animation)
                 end
             end
@@ -243,7 +277,9 @@ function This_MOD.create_entity()
 
         --- Mover las conexiones
         for _, conns in pairs(Connections) do
-            for _, conn in pairs(conns.pipe_connections or {}) do
+            for i, conn in pairs(conns.pipe_connections or {}) do
+                if i > 4 then return end
+                conn.direction = 4 * (i - 1)
                 if conn.position then
                     conn.position[1] = 0
                     conn.position[2] = 0
@@ -343,19 +379,11 @@ function This_MOD.is_beacon(entity)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Escalar module visualisations
-    if entity.graphics_set and entity.graphics_set.module_visualisations then
-        for _, vis in pairs(entity.graphics_set.module_visualisations) do
+    if entity.graphics_set then
+        for _, vis in pairs(entity.graphics_set.module_visualisations or {}) do
             for _, slot in pairs(vis.slots or {}) do
                 for _, pic in pairs(slot) do
-                    if pic.pictures then
-                        pic.pictures.scale = (pic.pictures.scale or 1) * This_MOD.new_scale
-                        if pic.pictures.shift then
-                            pic.pictures.shift = {
-                                (pic.pictures.shift[1] or 0) * This_MOD.new_scale,
-                                (pic.pictures.shift[2] or 0) * This_MOD.new_scale
-                            }
-                        end
-                    end
+                    This_MOD.change_scale(pic.pictures)
                 end
             end
         end
