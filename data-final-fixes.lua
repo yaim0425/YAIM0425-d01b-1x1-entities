@@ -58,6 +58,14 @@ function This_MOD.setting_mod()
         ["beacon"] = 0.25,
     }
 
+    --- Direcciones
+    This_MOD.direction = {
+        defines.direction.west,
+        defines.direction.east,
+        defines.direction.north,
+        defines.direction.south
+    }
+
     --- Cajas a 1x1
     This_MOD.collision_box = { { -0.3, -0.3 }, { 0.3, 0.3 } }
     This_MOD.selection_box = { { -0.5, -0.5 }, { 0.5, 0.5 } }
@@ -265,7 +273,7 @@ function This_MOD.create_entity()
         for _, conns in pairs(Connections) do
             for i, conn in pairs(conns.pipe_connections or {}) do
                 if i > 4 then return end
-                conn.direction = 4 * (i - 1)
+                conn.direction = This_MOD.direction[i]
                 if conn.position then
                     conn.position[1] = 0
                     conn.position[2] = 0
