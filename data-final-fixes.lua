@@ -191,36 +191,43 @@ function This_MOD.create_entity()
             --- Cambiar la escala de la imagen
             This_MOD.change_scale(Entity.pictures)
             if Entity.pictures.picture then
+                local Picture = Entity.pictures.picture
+
+                --- Diecciones a validar
                 for _, value in pairs(Directions) do
-                    This_MOD.change_scale(Entity.pictures.picture[value])
+                    This_MOD.change_scale(Picture[value])
                 end
-                if Entity.pictures.picture.sheets then
-                    This_MOD.change_scale({ layers = Entity.pictures.picture.sheets })
+
+                --- Cambiar la escala
+                if Picture.sheets then
+                    This_MOD.change_scale({ layers = Picture.sheets })
                 else
-                    This_MOD.change_scale(Entity.pictures.picture.sheet)
+                    This_MOD.change_scale(Picture.sheet)
                 end
             end
         end
 
         --- Revisar todas las imagenes
         if Entity.graphics_set then
-            This_MOD.change_scale(Entity.graphics_set.animation)
-            for _, Key in pairs(Entity.graphics_set.animation and Directions or {}) do
-                This_MOD.change_scale(Entity.graphics_set.animation[Key])
+            local Graphics = Entity.graphics_set
+
+            This_MOD.change_scale(Graphics.animation)
+            for _, Key in pairs(Graphics.animation and Directions or {}) do
+                This_MOD.change_scale(Graphics.animation[Key])
             end
 
-            This_MOD.change_scale(Entity.graphics_set.idle_animation)
-            This_MOD.change_scale(Entity.graphics_set.active_animation)
+            This_MOD.change_scale(Graphics.idle_animation)
+            This_MOD.change_scale(Graphics.active_animation)
 
-            for _, vis in pairs(Entity.graphics_set.animation_list or {}) do
+            for _, vis in pairs(Graphics.animation_list or {}) do
                 This_MOD.change_scale(vis.animation)
             end
 
-            if Entity.graphics_set.water_reflection then
-                This_MOD.change_scale(Entity.graphics_set.water_reflection.pictures)
+            if Graphics.water_reflection then
+                This_MOD.change_scale(Graphics.water_reflection.pictures)
             end
 
-            for _, vis in pairs(Entity.graphics_set.module_visualisations or {}) do
+            for _, vis in pairs(Graphics.module_visualisations or {}) do
                 for _, slot in pairs(vis.slots or {}) do
                     for _, pic in pairs(slot) do
                         This_MOD.change_scale(pic.pictures)
@@ -228,7 +235,7 @@ function This_MOD.create_entity()
                 end
             end
 
-            for _, vis in pairs(Entity.graphics_set.working_visualisations or {}) do
+            for _, vis in pairs(Graphics.working_visualisations or {}) do
                 for _, key in pairs(Directions) do
                     key = key .. "_position"
                     if vis[key] then
