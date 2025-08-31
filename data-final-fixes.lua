@@ -284,27 +284,27 @@ function This_MOD.create_entity()
         end
 
         --- Variables a usar
-        local used = {} --- direcciones ocupadas
-        local count = 0 --- contador de conexiones válidas
+        local Used = {} --- Direcciones ocupadas
+        local Count = 1 --- Contador de conexiones válidas
 
         --- Ajustar conexiones
         for _, conns in pairs(Connections) do
             for _, conn in pairs(conns.pipe_connections or {}) do
-                if count >= 4 then return end
-                local dir = conn.direction or defines.direction.north
+                if Count > 4 then return end
+                local Dir = conn.direction or defines.direction.north
 
-                if not used[dir] then
-                    -- usar la dirección original
-                    used[dir] = true
-                    conn.direction = dir
-                    count = count + 1
+                if not Used[Dir] then
+                    -- Usar la dirección original
+                    Used[Dir] = true
+                    conn.direction = Dir
+                    Count = Count + 1
                 else
-                    -- buscar alternativa
-                    for _, alt in ipairs(get_alternatives(dir)) do
-                        if not used[alt] then
-                            used[alt] = true
+                    -- Buscar alternativa
+                    for _, alt in ipairs(get_alternatives(Dir)) do
+                        if not Used[alt] then
+                            Used[alt] = true
                             conn.direction = alt
-                            count = count + 1
+                            Count = Count + 1
                             break
                         end
                     end
