@@ -171,10 +171,12 @@ function This_MOD.create_entity()
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Revisar todas las animaciones
+        This_MOD.change_scale(Entity.pictures)
         This_MOD.change_scale(Entity.animation)
         This_MOD.change_scale(Entity.base_picture)
         This_MOD.change_scale(Entity.idle_animation)
         This_MOD.change_scale(Entity.active_animation)
+        This_MOD.change_scale(Entity.integration_patch)
 
         --- Revisar todas las imagenes
         if Entity.graphics_set then
@@ -270,18 +272,29 @@ function This_MOD.create_entity()
             table.insert(Connections, { pipe_connections = Entity.energy_source.connections })
         end
 
-        --- Prioridades (inversa → derecha → izquierda)
-        local function get_alternatives(dir)
-            if dir == defines.direction.north then
-                return { defines.direction.south, defines.direction.east, defines.direction.west }
-            elseif dir == defines.direction.south then
-                return { defines.direction.north, defines.direction.west, defines.direction.east }
-            elseif dir == defines.direction.east then
-                return { defines.direction.west, defines.direction.south, defines.direction.north }
-            elseif dir == defines.direction.west then
-                return { defines.direction.east, defines.direction.north, defines.direction.south }
-            end
-        end
+        --- Prioridad (Inversa → Derecha → Izquierda)
+        local Priority = {
+            [defines.direction.north] = {
+                defines.direction.south,
+                defines.direction.east,
+                defines.direction.west
+            },
+            [defines.direction.south] = {
+                defines.direction.north,
+                defines.direction.west,
+                defines.direction.east
+            },
+            [defines.direction.east] = {
+                defines.direction.west,
+                defines.direction.south,
+                defines.direction.north
+            },
+            [defines.direction.west] = {
+                defines.direction.east,
+                defines.direction.north,
+                defines.direction.south
+            }
+        }
 
         --- Variables a usar
         local Used = {} --- Direcciones ocupadas
@@ -300,7 +313,7 @@ function This_MOD.create_entity()
                     Count = Count + 1
                 else
                     -- Buscar alternativa
-                    for _, alt in ipairs(get_alternatives(Dir)) do
+                    for _, alt in ipairs(Priority[Dir]) do
                         if not Used[alt] then
                             Used[alt] = true
                             conn.direction = alt
