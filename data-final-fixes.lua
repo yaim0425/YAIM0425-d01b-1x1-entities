@@ -123,8 +123,8 @@ function This_MOD.create_entity(space)
         ["beacon"] = true,
         ["furnace"] = true,
         ["storage-tank"] = true,
-        -- ["mining-drill"] = true,
-        ["assembling-machine"] = true
+        ["mining-drill"] = true,
+        -- ["assembling-machine"] = true
     }
     if Types[space.entity.type] then return end
 
@@ -137,7 +137,7 @@ function This_MOD.create_entity(space)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Valores a usar
-    local Entity = util.copy(space.entity)
+    local Entity = GPrefix.copy(space.entity)
     local Collision_box = space.entity.collision_box
     local Width = Collision_box[2][1] - Collision_box[1][1]
     local Height = Collision_box[2][2] - Collision_box[1][2]
@@ -498,8 +498,6 @@ function This_MOD.change_scale(images)
 
     --- Validación
     if not images then return end
-    if images.edited then return end
-    images.edited = true
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -512,6 +510,7 @@ function This_MOD.change_scale(images)
     end
 
     --- Estructura simplificada
+    if images.filename then return end
     images.scale = (images.scale or 1) * This_MOD.new_scale
     if images.shift then
         images.shift = {
@@ -569,4 +568,4 @@ This_MOD.start()
 -- GPrefix.var_dump(This_MOD.new_entity)
 
 -- GPrefix.var_dump(This_MOD)
--- ERROR()
+ERROR()
