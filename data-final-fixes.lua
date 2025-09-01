@@ -230,6 +230,7 @@ function This_MOD.create_entity(space)
     Entity.name = This_MOD.prefix .. GPrefix.delete_prefix(Entity.name)
     Entity.next_upgrade = nil
     Entity.alert_icon_shift = nil
+    Entity.icons_positioning = nil
     Entity.icon_draw_specification = nil
     Entity.collision_box = This_MOD.collision_box
     Entity.selection_box = This_MOD.selection_box
@@ -246,8 +247,8 @@ function This_MOD.create_entity(space)
     local Directions = { "north", "east", "south", "west" }
 
     --- Revisar todas las animaciones
-    This_MOD.change_scale(Entity.animation)
     This_MOD.change_scale(Entity.base_picture)
+    This_MOD.change_scale(Entity.animation)
     This_MOD.change_scale(Entity.idle_animation)
     This_MOD.change_scale(Entity.active_animation)
     This_MOD.change_scale(Entity.integration_patch)
@@ -281,13 +282,14 @@ function This_MOD.create_entity(space)
     if Entity.graphics_set then
         local Graphics = Entity.graphics_set
 
-        This_MOD.change_scale(Graphics.animation)
         for _, Key in pairs(Graphics.animation and Directions or {}) do
             This_MOD.change_scale(Graphics.animation[Key])
         end
 
+        This_MOD.change_scale(Graphics.animation)
         This_MOD.change_scale(Graphics.idle_animation)
         This_MOD.change_scale(Graphics.active_animation)
+        This_MOD.change_scale(Graphics.integration_patch)
 
         for _, vis in pairs(Graphics.animation_list or {}) do
             This_MOD.change_scale(vis.animation)
@@ -465,8 +467,7 @@ function This_MOD.create_entity(space)
     --- Crear el prototipo
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    if Entity.name == This_MOD.prefix .. "dino-dig-site " then
-        -- if Entity.name == This_MOD.prefix .. "pumpjack-mk01" then
+    if Entity.name == This_MOD.prefix .. "bioport " then
         GPrefix.var_dump(space.entity)
         GPrefix.var_dump(Entity)
     end
@@ -488,24 +489,26 @@ function This_MOD.change_scale(images)
 
     --- Validación
     if not images then return end
+    if images.edited then return end
+    images.edited = true
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Estructura a modificar
     if images.layers then
         for _, layer in pairs(images.layers) do
-            layer.scale = (layer.scale or 1) * This_MOD.new_scale
-            if layer.shift then
-                layer.shift[1] = layer.shift[1] * This_MOD.new_scale
-                layer.shift[2] = layer.shift[2] * This_MOD.new_scale
-            end
+            This_MOD.change_scale(layer)
         end
-    else
-        images.scale = (images.scale or 1) * This_MOD.new_scale
-        if images.shift then
-            images.shift[1] = images.shift[1] * This_MOD.new_scale
-            images.shift[2] = images.shift[2] * This_MOD.new_scale
-        end
+        return
+    end
+
+    --- Estructura simplificada
+    images.scale = (images.scale or 1) * This_MOD.new_scale
+    if images.shift then
+        images.shift = {
+            images.shift[1] * This_MOD.new_scale,
+            images.shift[2] * This_MOD.new_scale
+        }
     end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
