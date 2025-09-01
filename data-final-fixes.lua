@@ -123,8 +123,8 @@ function This_MOD.create_entity(space)
         ["beacon"] = true,
         ["furnace"] = true,
         ["storage-tank"] = true,
-        ["mining-drill"] = true,
-        -- ["assembling-machine"] = true
+        -- ["mining-drill"] = true,
+        ["assembling-machine"] = true
     }
     if Types[space.entity.type] then return end
 
@@ -179,16 +179,16 @@ function This_MOD.create_entity(space)
         if math.abs(X) > math.abs(Y) then
             -- Horizontal
             if X > 0 then
-                Entity.vector_to_place_result = { 0.9, 0 }
+                Entity.vector_to_place_result = { 0.7, 0 }
             else
-                Entity.vector_to_place_result = { -0.9, 0 }
+                Entity.vector_to_place_result = { -0.7, 0 }
             end
         else
             -- Vertical
             if Y > 0 then
-                Entity.vector_to_place_result = { 0, 0.9 }
+                Entity.vector_to_place_result = { 0, 0.7 }
             else
-                Entity.vector_to_place_result = { 0, -0.9 }
+                Entity.vector_to_place_result = { 0, -0.7 }
             end
         end
     end
@@ -382,6 +382,14 @@ function This_MOD.create_entity(space)
         table.insert(Connections, Entity.fluid_box)
     end
 
+    if Entity.input_fluid_box then
+        table.insert(Connections, Entity.input_fluid_box)
+    end
+
+    if Entity.output_fluid_box then
+        table.insert(Connections, Entity.output_fluid_box)
+    end
+
     if Entity.energy_source then
         if Entity.energy_source.type == "fluid" then
             table.insert(Connections, Entity.energy_source.fluid_box)
@@ -467,7 +475,8 @@ function This_MOD.create_entity(space)
     --- Crear el prototipo
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    if Entity.name == This_MOD.prefix .. "bioport " then
+    -- if Entity.name == This_MOD.prefix .. "pumpjack" then
+    if Entity.name == This_MOD.prefix .. "electric-mining-drill" then
         GPrefix.var_dump(space.entity)
         GPrefix.var_dump(Entity)
     end
@@ -513,6 +522,35 @@ function This_MOD.change_scale(images)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
+
+--- Buscar imagenes en estructuras conocidas
+function This_MOD.search_image(structures)
+    local SubStr = {
+        "north",
+        "east",
+        "south",
+        "west",
+        "picture",
+        "pictures"
+    }
+
+    local Str = {
+        "animation",
+        "idle_animation",
+        "active_animation",
+        "water_reflection",
+        "integration_patch",
+        "pictures"
+    }
+
+    for _, key in pairs(Str) do
+        This_MOD.change_scale(structures[key])
+        for _, dir in pairs(structures[key] and SubStr or {}) do
+            This_MOD.change_scale(structures[key][dir])
+        end
+    end
+end
+
 
 ---------------------------------------------------------------------------------------------------
 
