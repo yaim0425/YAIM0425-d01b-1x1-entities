@@ -231,7 +231,7 @@ function This_MOD.create_entity(space)
         end
     end
 
-    --- Escalar las imagenes
+    --- Buscar en cada propiedad
     for _, Property in pairs({
         "picture",
         "pictures",
@@ -244,7 +244,10 @@ function This_MOD.create_entity(space)
         "integration_patch",
         "wet_mining_graphics_set"
     }) do
-        for _, value in pairs(GPrefix.get_tables(Entity[Property], "filename") or {}) do
+        local Value = Entity[Property]
+
+        --- Escalar las imagenes
+        for _, value in pairs(GPrefix.get_tables(Value, "filename") or {}) do
             value.scale = (value.scale or 1) * This_MOD.new_scale
             if value.shift then
                 value.shift[1] = value.shift[1] * This_MOD.new_scale
@@ -252,16 +255,18 @@ function This_MOD.create_entity(space)
             end
         end
 
+        --- Ajustar los puntos
+        local Points
         for _, dir in pairs({ "north", "east", "south", "west" }) do
-            local Points = Entity[Property].shift_animation_waypoints
-            for _, value in pairs(Points and Points[dir] or {}) do
+            Points = Value ~= nil and Value.shift_animation_waypoints or nil
+            for _, value in pairs(Points ~= nil and Points[dir] or {}) do
                 value[1] = value[1] * Factor[1]
                 value[2] = value[2] * Factor[2]
             end
 
             local Key = dir .. "_position"
-            Points = Entity[Property].working_visualisations
-            for _, value in pairs(Points or {}) do
+            Points = Value ~= nil and Value.working_visualisations or nil
+            for _, value in pairs(Points ~= nil and Points or {}) do
                 if value[Key] then
                     if value[Key][1] == 0 and value[Key][2] == 0 then
                         value[Key] = nil
