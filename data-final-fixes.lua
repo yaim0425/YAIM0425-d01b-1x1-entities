@@ -123,8 +123,8 @@ function This_MOD.create_entity(space)
         ["beacon"] = true,
         ["furnace"] = true,
         ["storage-tank"] = true,
-        ["mining-drill"] = true,
-        -- ["assembling-machine"] = true
+        -- ["mining-drill"] = true,
+        ["assembling-machine"] = true
     }
     if Types[space.entity.type] then return end
 
@@ -202,7 +202,6 @@ function This_MOD.create_entity(space)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     if Entity.radius_visualisation_specification then
-
         --- Valores a usar
         local spec = Entity.radius_visualisation_specification
         local dir = Entity.place_direction or defines.direction.north
@@ -243,93 +242,58 @@ function This_MOD.create_entity(space)
     --- Escalar las imagenes
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Variable a usar
-    local Directions = { "north", "east", "south", "west" }
-
-    --- Revisar todas las animaciones
-    This_MOD.change_scale(Entity.base_picture)
-    This_MOD.change_scale(Entity.animation)
-    This_MOD.change_scale(Entity.idle_animation)
-    This_MOD.change_scale(Entity.active_animation)
-    This_MOD.change_scale(Entity.integration_patch)
-
+    --- Elimnar lo inecesario
     if Entity.pictures then
-        --- Elimnar lo inecesario
         for _, value in pairs({ "fluid_background", "window_background", "flow_sprite", "gas_flow" }) do
             Entity.pictures[value] = nil
         end
+    end
 
-        --- Cambiar la escala de la imagen
-        This_MOD.change_scale(Entity.pictures)
-        if Entity.pictures.picture then
-            local Picture = Entity.pictures.picture
+    --- Tablas raiz
+    local Str = {
+        "picture",
+        "pictures",
+        "animation",
+        "base_picture",
+        "graphics_set",
+        "idle_animation",
+        "active_animation",
+        "water_reflection",
+        "integration_patch",
+    }
 
-            --- Diecciones a validar
-            for _, value in pairs(Directions) do
-                This_MOD.change_scale(Picture[value])
-            end
-
-            --- Cambiar la escala
-            if Picture.sheets then
-                This_MOD.change_scale({ layers = Picture.sheets })
-            else
-                This_MOD.change_scale(Picture.sheet)
+    --- Escalar las imagenes
+    for _, value in pairs(Str) do
+        for _, v in pairs(GPrefix.get_tables(Entity[value], "filename") or {}) do
+            v.scale = (v.scale or 1) * This_MOD.new_scale
+            if v.shift then
+                v.shift = {
+                    v.shift[1] * This_MOD.new_scale,
+                    v.shift[2] * This_MOD.new_scale
+                }
             end
         end
     end
 
-    --- Revisar todas las imagenes
-    if Entity.graphics_set then
-        local Graphics = Entity.graphics_set
-
-        for _, Key in pairs(Graphics.animation and Directions or {}) do
-            This_MOD.change_scale(Graphics.animation[Key])
-        end
-
-        This_MOD.change_scale(Graphics.animation)
-        This_MOD.change_scale(Graphics.idle_animation)
-        This_MOD.change_scale(Graphics.active_animation)
-        This_MOD.change_scale(Graphics.integration_patch)
-
-        for _, vis in pairs(Graphics.animation_list or {}) do
-            This_MOD.change_scale(vis.animation)
-        end
-
-        if Graphics.water_reflection then
-            This_MOD.change_scale(Graphics.water_reflection.pictures)
-        end
-
-        for _, vis in pairs(Graphics.module_visualisations or {}) do
-            for _, slot in pairs(vis.slots or {}) do
-                for _, pic in pairs(slot) do
-                    This_MOD.change_scale(pic.pictures)
+    --- Corrección en los puntos
+    local Graphics = Entity.graphics_set or {}
+    for _, vis in pairs(Graphics.working_visualisations or {}) do
+        for _, key in pairs({ "north", "east", "south", "west" }) do
+            key = key .. "_position"
+            if vis[key] then
+                if vis[key][1] == 0 and vis[key][2] == 0 then
+                    vis[key] = nil
+                else
+                    vis[key] = {
+                        vis[key][1] * Factor[1],
+                        vis[key][2] * Factor[2]
+                    }
                 end
             end
         end
-
-        for _, vis in pairs(Graphics.working_visualisations or {}) do
-            for _, key in pairs(Directions) do
-                key = key .. "_position"
-                if vis[key] then
-                    if vis[key][1] == 0 and vis[key][2] == 0 then
-                        vis[key] = nil
-                    else
-                        vis[key] = {
-                            vis[key][1] * Factor[1],
-                            vis[key][2] * Factor[2]
-                        }
-                    end
-                end
-            end
-            This_MOD.change_scale(vis.animation)
-        end
     end
 
-    if Entity.water_reflection then
-        This_MOD.change_scale(Entity.water_reflection.pictures)
-    end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    -- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 
 
@@ -492,65 +456,6 @@ function This_MOD.create_entity(space)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
---- Cambia la scala de la entidad
-function This_MOD.change_scale(images)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Validación
-    if not images then return end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Estructura a modificar
-    if images.layers then
-        for _, layer in pairs(images.layers) do
-            This_MOD.change_scale(layer)
-        end
-        return
-    end
-
-    --- Estructura simplificada
-    if images.filename then return end
-    images.scale = (images.scale or 1) * This_MOD.new_scale
-    if images.shift then
-        images.shift = {
-            images.shift[1] * This_MOD.new_scale,
-            images.shift[2] * This_MOD.new_scale
-        }
-    end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-end
-
---- Buscar imagenes en estructuras conocidas
-function This_MOD.search_image(structures)
-    local SubStr = {
-        "north",
-        "east",
-        "south",
-        "west",
-        "picture",
-        "pictures"
-    }
-
-    local Str = {
-        "animation",
-        "idle_animation",
-        "active_animation",
-        "water_reflection",
-        "integration_patch",
-        "pictures"
-    }
-
-    for _, key in pairs(Str) do
-        This_MOD.change_scale(structures[key])
-        for _, dir in pairs(structures[key] and SubStr or {}) do
-            This_MOD.change_scale(structures[key][dir])
-        end
-    end
-end
-
-
 ---------------------------------------------------------------------------------------------------
 
 
@@ -568,4 +473,4 @@ This_MOD.start()
 -- GPrefix.var_dump(This_MOD.new_entity)
 
 -- GPrefix.var_dump(This_MOD)
-ERROR()
+-- ERROR()
