@@ -115,24 +115,6 @@ end
 --- Crear la entidad deseada
 function This_MOD.create_entity(space)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-    --- Validación
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    local Types = {
-        ["radar"] = true,
-        ["beacon"] = true,
-        ["furnace"] = true,
-        ["storage-tank"] = true,
-        -- ["mining-drill"] = true,
-        ["assembling-machine"] = true
-    }
-    if Types[space.entity.type] then return end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     --- Información importante
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -250,7 +232,7 @@ function This_MOD.create_entity(space)
     end
 
     --- Tablas raiz
-    local Str = {
+    local Properties = {
         "picture",
         "pictures",
         "animation",
@@ -260,34 +242,41 @@ function This_MOD.create_entity(space)
         "active_animation",
         "water_reflection",
         "integration_patch",
+        "wet_mining_graphics_set",
     }
 
     --- Escalar las imagenes
-    for _, value in pairs(Str) do
-        for _, v in pairs(GPrefix.get_tables(Entity[value], "filename") or {}) do
-            v.scale = (v.scale or 1) * This_MOD.new_scale
-            if v.shift then
-                v.shift = {
-                    v.shift[1] * This_MOD.new_scale,
-                    v.shift[2] * This_MOD.new_scale
-                }
+    for _, Property in pairs(Properties) do
+        for _, value in pairs(GPrefix.get_tables(Entity[Property], "filename") or {}) do
+            value.scale = (value.scale or 1) * This_MOD.new_scale
+            if value.shift then
+                value.shift[1] = value.shift[1] * This_MOD.new_scale
+                value.shift[2] = value.shift[2] * This_MOD.new_scale
             end
         end
     end
 
     --- Corrección en los puntos
-    local Graphics = Entity.graphics_set or {}
-    for _, vis in pairs(Graphics.working_visualisations or {}) do
-        for _, key in pairs({ "north", "east", "south", "west" }) do
-            key = key .. "_position"
-            if vis[key] then
-                if vis[key][1] == 0 and vis[key][2] == 0 then
-                    vis[key] = nil
-                else
-                    vis[key] = {
-                        vis[key][1] * Factor[1],
-                        vis[key][2] * Factor[2]
-                    }
+    for _, graphics_set in pairs({ Entity.graphics_set, Entity.wet_mining_graphics_set }) do
+        for _, dir in pairs({ "north", "east", "south", "west" }) do
+            local Points = graphics_set.shift_animation_waypoints
+            for _, value in pairs(Points and Points[dir] or {}) do
+                value[1] = value[1] * Factor[1]
+                value[2] = value[2] * Factor[2]
+            end
+
+            local Key = dir .. "_position"
+            Points = graphics_set.working_visualisations
+            for _, value in pairs(Points or {}) do
+                if value[Key] then
+                    if value[Key][1] == 0 and value[Key][2] == 0 then
+                        value[Key] = nil
+                    else
+                        value[Key] = {
+                            value[Key][1] * Factor[1],
+                            value[Key][2] * Factor[2]
+                        }
+                    end
                 end
             end
         end
@@ -329,36 +318,13 @@ function This_MOD.create_entity(space)
 
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-    --- Conexiones
+    --- Conexiones externa
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Contenedor
-    local Connections = {}
-
     --- Agrupar las conexiones a mover
-    if Entity.fluid_boxes then
-        for _, box in pairs(Entity.fluid_boxes) do
-            table.insert(Connections, box)
-        end
-    end
-
-    if Entity.fluid_box then
-        table.insert(Connections, Entity.fluid_box)
-    end
-
-    if Entity.input_fluid_box then
-        table.insert(Connections, Entity.input_fluid_box)
-    end
-
-    if Entity.output_fluid_box then
-        table.insert(Connections, Entity.output_fluid_box)
-    end
+    local Connections = GPrefix.get_tables(Entity, "pipe_connections") or {}
 
     if Entity.energy_source then
-        if Entity.energy_source.type == "fluid" then
-            table.insert(Connections, Entity.energy_source.fluid_box)
-        end
-
         if Entity.energy_source.type == "heat" then
             table.insert(Connections, { pipe_connections = Entity.energy_source.connections })
         end
@@ -439,12 +405,6 @@ function This_MOD.create_entity(space)
     --- Crear el prototipo
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    -- if Entity.name == This_MOD.prefix .. "pumpjack" then
-    if Entity.name == This_MOD.prefix .. "electric-mining-drill" then
-        GPrefix.var_dump(space.entity)
-        GPrefix.var_dump(Entity)
-    end
-
     --- Crear el prototipo
     GPrefix.extend(Entity)
 
@@ -468,9 +428,3 @@ end
 This_MOD.start()
 
 ---------------------------------------------------------------------------------------------------
-
--- GPrefix.var_dump(This_MOD.entities)
--- GPrefix.var_dump(This_MOD.new_entity)
-
--- GPrefix.var_dump(This_MOD)
--- ERROR()
