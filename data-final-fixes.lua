@@ -49,7 +49,15 @@ function This_MOD.setting_mod()
         ["furnace"] = true,
         ["storage-tank"] = true,
         ["mining-drill"] = true,
-        ["assembling-machine"] = true
+        ["assembling-machine"] = true,
+
+        ["boiler"] = true,
+        ["generator"] = true,
+        ["reactor"] = true,
+        ["fusion-generator"] = true,
+        ["fusion-reactor"] = true,
+        ["accumulator"] = true,
+        ["solar-panel"] = true,
     }
 
     --- Corrección en la escala
@@ -114,6 +122,31 @@ end
 
 --- Crear la entidad deseada
 function This_MOD.create_entity(space)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    local Valide = {
+        -- ["radar"] = true,
+        -- ["beacon"] = true,
+        -- ["furnace"] = true,
+        -- ["storage-tank"] = true,
+        -- ["mining-drill"] = true,
+        -- ["assembling-machine"] = true,
+
+        ["boiler"] = true,
+        ["generator"] = true,
+        ["reactor"] = true,
+        ["fusion-generator"] = true,
+        ["fusion-reactor"] = true,
+        ["accumulator"] = true,
+        ["solar-panel"] = true,
+    }
+    if not Valide[space.entity.type] then return end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     --- Información importante
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -404,6 +437,16 @@ function This_MOD.create_entity(space)
     --- Crear el prototipo
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+    -- if space.entity.name == "steam-engine" then
+    -- if space.entity.name == "steam-turbine" then
+    if space.entity.name == "nuclear-reactor" then
+    -- if space.entity.name == "accumulator" then
+    -- if space.entity.name == "solar-panel" then
+        GPrefix.var_dump(space.entity)
+        GPrefix.var_dump(Entity)
+    end
+
+
     --- Crear el prototipo
     GPrefix.extend(Entity)
 
@@ -427,3 +470,5 @@ end
 This_MOD.start()
 
 ---------------------------------------------------------------------------------------------------
+
+ERROR()
