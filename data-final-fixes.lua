@@ -231,8 +231,8 @@ function This_MOD.create_entity(space)
         end
     end
 
-    --- Tablas raiz
-    local Properties = {
+    --- Escalar las imagenes
+    for _, Property in pairs({
         "picture",
         "pictures",
         "animation",
@@ -242,11 +242,8 @@ function This_MOD.create_entity(space)
         "active_animation",
         "water_reflection",
         "integration_patch",
-        "wet_mining_graphics_set",
-    }
-
-    --- Escalar las imagenes
-    for _, Property in pairs(Properties) do
+        "wet_mining_graphics_set"
+    }) do
         for _, value in pairs(GPrefix.get_tables(Entity[Property], "filename") or {}) do
             value.scale = (value.scale or 1) * This_MOD.new_scale
             if value.shift then
@@ -254,19 +251,16 @@ function This_MOD.create_entity(space)
                 value.shift[2] = value.shift[2] * This_MOD.new_scale
             end
         end
-    end
 
-    --- Corrección en los puntos
-    for _, graphics_set in pairs({ Entity.graphics_set, Entity.wet_mining_graphics_set }) do
         for _, dir in pairs({ "north", "east", "south", "west" }) do
-            local Points = graphics_set.shift_animation_waypoints
+            local Points = Entity[Property].shift_animation_waypoints
             for _, value in pairs(Points and Points[dir] or {}) do
                 value[1] = value[1] * Factor[1]
                 value[2] = value[2] * Factor[2]
             end
 
             local Key = dir .. "_position"
-            Points = graphics_set.working_visualisations
+            Points = Entity[Property].working_visualisations
             for _, value in pairs(Points or {}) do
                 if value[Key] then
                     if value[Key][1] == 0 and value[Key][2] == 0 then
