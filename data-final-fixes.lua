@@ -276,17 +276,16 @@ function This_MOD.create_entity(space)
         end
 
         --- Ajustar los puntos
-        local Points
-        for _, dir in pairs({ "north", "east", "south", "west" }) do
-            Points = Value ~= nil and Value.shift_animation_waypoints or nil
-            for _, value in pairs(Points ~= nil and Points[dir] or {}) do
+        local Points = Value and Value.working_visualisations
+        local Waypoints = Value and Value.shift_animation_waypoints
+        for _, dir in pairs((Waypoints or Points) and { "north", "east", "south", "west" } or {}) do
+            for _, value in pairs((Waypoints and Waypoints[dir]) and Waypoints[dir] or {}) do
                 value[1] = value[1] * Factor[1]
                 value[2] = value[2] * Factor[2]
             end
 
             local Key = dir .. "_position"
-            Points = Value ~= nil and Value.working_visualisations or nil
-            for _, value in pairs(Points ~= nil and Points or {}) do
+            for _, value in pairs(Points or {}) do
                 if value[Key] then
                     if value[Key][1] == 0 and value[Key][2] == 0 then
                         value[Key] = nil
