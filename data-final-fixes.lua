@@ -54,8 +54,8 @@ function This_MOD.setting_mod()
         ["boiler"] = true,
         ["generator"] = true,
         ["reactor"] = true,
-        ["fusion-generator"] = true,
-        ["fusion-reactor"] = true,
+        -- ["fusion-generator"] = true,
+        -- ["fusion-reactor"] = true,
         ["accumulator"] = true,
         ["solar-panel"] = true,
     }
@@ -269,13 +269,31 @@ function This_MOD.create_entity(space)
         "picture",
         "pictures",
         "animation",
+        "heat_buffer",
         "base_picture",
         "graphics_set",
         "idle_animation",
         "active_animation",
         "water_reflection",
         "integration_patch",
-        "wet_mining_graphics_set"
+        "lower_layer_picture",
+        "working_light_picture",
+        "wet_mining_graphics_set",
+        "heat_lower_layer_picture",
+        "connection_patches_connected",
+        "connection_patches_disconnected",
+        "heat_connection_patches_connected",
+        "heat_connection_patches_disconnected",
+        "chargable_graphics",
+        "overlay",
+        "horizontal_animation",
+        "vertical_animation",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
     }) do
         local Value = Entity[Property]
 
@@ -319,28 +337,26 @@ function This_MOD.create_entity(space)
 
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-    --- Conexiones de circuitos
+    --- Conexiones de circuitos logicos
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Escalar circuit connectors
-    if Entity.circuit_connector then
-        for _, connector in pairs(Entity.circuit_connector) do
-            if connector.sprites then
-                for _, spr in pairs(connector.sprites) do
-                    if spr.scale then spr.scale = spr.scale * This_MOD.new_scale end
-                    if spr.shift then
-                        spr.shift[1] = spr.shift[1] * This_MOD.new_scale
-                        spr.shift[2] = spr.shift[2] * This_MOD.new_scale
-                    end
-                end
-            end
-            if connector.points then
-                for _, side in pairs(connector.points) do
-                    for _, pos in pairs(side) do
-                        pos[1] = pos[1] * This_MOD.new_scale
-                        pos[2] = pos[2] * This_MOD.new_scale
-                    end
-                end
+    for _, value in pairs(GPrefix.get_tables(Entity.circuit_connector, "filename") or {}) do
+        if value.scale then
+            value.scale = value.scale * This_MOD.new_scale
+        end
+        if value.shift then
+            value.shift[1] = value.shift[1] * This_MOD.new_scale
+            value.shift[2] = value.shift[2] * This_MOD.new_scale
+        end
+    end
+
+    --- Escalar los puntos
+    for _, value in pairs(GPrefix.get_tables(Entity.circuit_connector, "points") or {}) do
+        for _, point in pairs(value.points) do
+            for _, pos in pairs(point) do
+                pos[1] = pos[1] * This_MOD.new_scale
+                pos[2] = pos[2] * This_MOD.new_scale
             end
         end
     end
@@ -360,6 +376,10 @@ function This_MOD.create_entity(space)
         if Entity.energy_source.type == "heat" then
             table.insert(Connections, { pipe_connections = Entity.energy_source.connections })
         end
+    end
+
+    if Entity.heat_buffer then
+        table.insert(Connections, { pipe_connections = Entity.heat_buffer.connections })
     end
 
     --- Prioridad (Inversa → Derecha → Izquierda)
@@ -437,9 +457,10 @@ function This_MOD.create_entity(space)
     --- Crear el prototipo
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+    if space.entity.name == " " then
     -- if space.entity.name == "steam-engine" then
     -- if space.entity.name == "steam-turbine" then
-    if space.entity.name == "nuclear-reactor" then
+    -- if space.entity.name == "nuclear-reactor" then
     -- if space.entity.name == "accumulator" then
     -- if space.entity.name == "solar-panel" then
         GPrefix.var_dump(space.entity)
@@ -471,4 +492,4 @@ This_MOD.start()
 
 ---------------------------------------------------------------------------------------------------
 
-ERROR()
+-- ERROR()
