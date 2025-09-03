@@ -52,12 +52,12 @@ function This_MOD.setting_mod()
         ["assembling-machine"] = true,
 
         ["boiler"] = true,
-        ["generator"] = true,
         ["reactor"] = true,
-        -- ["fusion-generator"] = true, --- No tengo DLC
-        -- ["fusion-reactor"] = true, --- No tengo DLC
+        ["generator"] = true,
         ["accumulator"] = true,
         ["solar-panel"] = true,
+        -- ["fusion-reactor"] = true, --- No tengo el DLC
+        -- ["fusion-generator"] = true, --- No tengo el DLC
     }
 
     --- Corrección en la escala
