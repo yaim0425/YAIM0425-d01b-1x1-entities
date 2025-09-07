@@ -36,28 +36,20 @@ function This_MOD.start()
     --- Modificar los elementos
     for iKey, spaces in pairs(This_MOD.to_be_prosecuted) do
         for jKey, space in pairs(spaces) do
-            if
-                not This_MOD.prosecuted[iKey] or
-                (
-                    This_MOD.prosecuted[iKey] and
-                    not This_MOD.prosecuted[iKey][jKey]
-                )
-            then
-                --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+            --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-                --- Marcar como procesado
-                This_MOD.prosecuted[iKey] = This_MOD.prosecuted[iKey] or {}
-                This_MOD.prosecuted[iKey][jKey] = true
+            --- Marcar como procesado
+            This_MOD.prosecuted[iKey] = This_MOD.prosecuted[iKey] or {}
+            This_MOD.prosecuted[iKey][jKey] = true
 
-                --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+            --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-                --- Crear los elementos
-                This_MOD.create_recipe(space)
-                This_MOD.create_item(space)
-                This_MOD.create_entity(space)
+            --- Crear los elementos
+            This_MOD.create_recipe(space)
+            This_MOD.create_item(space)
+            This_MOD.create_entity(space)
 
-                --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-            end
+            --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
         end
     end
 
