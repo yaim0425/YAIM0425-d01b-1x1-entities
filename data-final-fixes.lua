@@ -269,9 +269,11 @@ function This_MOD.create_item(space)
     --- Cambiar algunas propiedades
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    Item.name = This_MOD.prefix .. GMOD.delete_prefix(Item.name)
-    Item.place_result = This_MOD.prefix .. GMOD.delete_prefix(space.entity.name)
-    Item.icons = space.entity.icons
+    Item.name = This_MOD.prefix .. GMOD.delete_prefix(space.item.name)
+
+    Item.place_result = This_MOD.prefix .. GMOD.delete_prefix(space.item.name)
+
+    table.insert(Item.icons, This_MOD.indicator)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
