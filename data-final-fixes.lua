@@ -154,27 +154,7 @@ function This_MOD.get_elements()
                     Space.entity = entity
                     Space.recipe = GMOD.recipes[Space.item.name]
                     Space.tech = GMOD.get_technology(Space.recipe)
-
-                    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-                    --- Ajustar la receta a usar
-                    if not Space.tech then
-                        if Space.recipe then
-                            Space.recipe = Space.recipe[1]
-                        end
-                    else
-                        for _, effect in pairs(Space.tech.effects) do
-                            if effect.type == "unlock-recipe" then
-                                for _, recipe in pairs(Space.recipe) do
-                                    if effect.recipe == recipe.name then
-                                        Space.recipe = recipe
-                                        break
-                                    end
-                                end
-                            end
-                            if Space.recipe.name then break end
-                        end
-                    end
+                    Space.recipe = Space.recipe and Space.recipe[1] or nil
 
                     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -222,10 +202,28 @@ function This_MOD.create_recipe(space)
     --- Cambiar algunas propiedades
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    Recipe.name = This_MOD.prefix .. GMOD.delete_prefix(Recipe.name)
-    local Result = GMOD.get_tables(Recipe.results, "name", space.item.name, true)
-    if not Result then return else Result = Result[1] end
-    Result.name = This_MOD.prefix .. GMOD.delete_prefix(Result.name)
+    Recipe.name = This_MOD.prefix .. GMOD.delete_prefix(space.item.name)
+
+    Recipe.main_product = nil
+    Recipe.energy_required = 5 * 60 --- 5 minutos
+
+    Recipe.icons = GMOD.copy(space.item.icons)
+    table.insert(Recipe.icons, This_MOD.indicator)
+
+    local Order = tonumber(Recipe.order) + 1
+    Recipe.order = GMOD.pad_left_zeros(#Recipe.order, Order)
+
+    Recipe.ingredients = { {
+        type = "item",
+        name = space.item.name,
+        amount = 1
+    } }
+
+    Recipe.results = { {
+        type = "item",
+        name = Recipe.name,
+        amount = 1
+    } }
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
