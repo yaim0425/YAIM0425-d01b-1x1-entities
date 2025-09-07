@@ -424,7 +424,7 @@ function This_MOD.create_entity(space)
 
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-    --- Mover el are afectada
+    --- Mover el area afectada
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     if Entity.radius_visualisation_specification then
