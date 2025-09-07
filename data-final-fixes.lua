@@ -133,7 +133,35 @@ end
 function This_MOD.get_elements()
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+    --- Buscar las entidades a afectar
+    for _, entity in pairs(GMOD.entities) do
+        if This_MOD.types[entity.type] then
+            local Space = {}
+            Space.item = GMOD.get_item_create_entity(entity)
+            if Space.item then
+                if
+                    not This_MOD.prosecuted[entity] or
+                    (
+                        This_MOD.prosecuted[entity] and
+                        not This_MOD.prosecuted[entity][Space.item.name]
+                    )
+                then
+                    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+                    --- Valores para el proceso
+                    Space.entity = entity
+                    Space.recipe = GMOD.recipes[Space.item.name] or nil
+                    Space.tech = GMOD.get_technology(Space.recipe)
+
+                    --- Guardar la información
+                    This_MOD.to_be_prosecuted[entity.type] = This_MOD.to_be_prosecuted[entity.type] or {}
+                    This_MOD.to_be_prosecuted[entity.type][entity.name] = Space
+
+                    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+                end
+            end
+        end
+    end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
