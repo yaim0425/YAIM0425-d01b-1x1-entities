@@ -619,8 +619,8 @@ function This_MOD.create_entity(space)
         }
     }
 
-    --- Variables a usar
-    local Used = {} --- Direcciones ocupadas
+    --- Direcciones ocupadas
+    local Used = {}
 
     --- Ajustar conexiones
     for _, conns in pairs(Connections) do
