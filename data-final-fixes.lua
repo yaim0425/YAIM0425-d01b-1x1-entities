@@ -149,6 +149,13 @@ function This_MOD.get_elements()
             return
         end
 
+        --- Evitar las entidades 1x1
+        local Selection_box_str =
+            entity.selection_box[1][1] .. " x " .. entity.selection_box[1][2]
+            .. "   " ..
+            entity.selection_box[2][1] .. " x " .. entity.selection_box[2][2]
+        if Selection_box_str == This_MOD.selection_box_str then return end
+
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 
@@ -360,22 +367,6 @@ function This_MOD.create_entity(space)
     This_MOD.new_scale =
         This_MOD.new_scale -
         This_MOD.scale * This_MOD.new_scale
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-    --- Evitar las entidades 1x1
-    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    local Selection_box_str =
-        Entity.selection_box[1][1] .. " x " .. Entity.selection_box[1][2]
-        .. "   " ..
-        Entity.selection_box[2][1] .. " x " .. Entity.selection_box[2][2]
-    if Selection_box_str == This_MOD.selection_box_str then return end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
