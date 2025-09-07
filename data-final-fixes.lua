@@ -393,13 +393,31 @@ function This_MOD.create_entity(space)
     --- Cambiar algunas propiedades
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    Entity.name = This_MOD.prefix .. GMOD.delete_prefix(Entity.name)
-    Entity.next_upgrade = nil
+    Entity.name = This_MOD.prefix .. GMOD.delete_prefix(space.item.name)
+
     Entity.alert_icon_shift = nil
+
     Entity.icons_positioning = nil
     Entity.icon_draw_specification = nil
+
     Entity.collision_box = This_MOD.collision_box
     Entity.selection_box = This_MOD.selection_box
+
+    Entity.minable.results = { {
+        type = "item",
+        name = Entity.name,
+        amount = 1
+    } }
+
+    if Entity.next_upgrade then
+        if This_MOD.to_be_prosecuted[Entity.type] and This_MOD.to_be_prosecuted[Entity.type][Entity.next_upgrade] then
+            Entity.next_upgrade = This_MOD.prefix .. GMOD.delete_prefix(Entity.next_upgrade)
+        elseif This_MOD.prosecuted[Entity.type] and This_MOD.prosecuted[Entity.type][Entity.next_upgrade] then
+            Entity.next_upgrade = This_MOD.prefix .. GMOD.delete_prefix(Entity.next_upgrade)
+        else
+            Entity.next_upgrade = nil
+        end
+    end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -596,10 +614,9 @@ function This_MOD.create_entity(space)
 
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-    --- Icono del MOD
+    --- Agregar los indicadores del mod
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Agregar los indicadores del mod
     table.insert(Entity.icons, This_MOD.indicator)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -612,13 +629,7 @@ function This_MOD.create_entity(space)
     --- Crear el prototipo
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Crear el prototipo
     GMOD.extend(Entity)
-
-    --- Guardar el prototipo
-    This_MOD.new_entity = This_MOD.new_entity or {}
-    This_MOD.new_entity[Entity.type] = This_MOD.new_entity[Entity.type] or {}
-    This_MOD.new_entity[Entity.type][Entity.name] = Entity
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
