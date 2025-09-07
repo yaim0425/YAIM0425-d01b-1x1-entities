@@ -159,7 +159,7 @@ function This_MOD.get_elements()
         --- Conexiones externas
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-        --- Agrupar las conexiones a mover
+        --- Agrupar las conexiones
         local Connections = GMOD.get_tables(entity, "pipe_connections", nil, true) or {}
 
         --- Agregar las conexiones de calor
@@ -174,7 +174,7 @@ function This_MOD.get_elements()
             table.insert(Connections, { pipe_connections = entity.heat_buffer.connections })
         end
 
-        --- Extraer las conexiones (máximo 4)
+        --- Validación de las conexiones (4 máximo)
         local Count = 0
         for _, t in pairs(Connections) do
             for _, _ in pairs(t.pipe_connections or {}) do
