@@ -79,7 +79,7 @@ function This_MOD.setting_mod()
 
     --- Contenedor de los elementos que el MOD modoficó o modificará
     This_MOD.to_be_prosecuted = {}
-    This_MOD.prosecuted = {}
+    This_MOD.prosecuted = This_MOD.prosecuted or {}
 
     --- Tipos a afectar
     This_MOD.types = {
