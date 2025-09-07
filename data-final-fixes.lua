@@ -49,6 +49,8 @@ function This_MOD.start()
                 This_MOD.prosecuted[iKey] = This_MOD.prosecuted[iKey] or {}
                 This_MOD.prosecuted[iKey][jKey] = true
 
+                --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
                 --- Crear los elementos
                 This_MOD.create_recipe(space)
                 This_MOD.create_item(space)
