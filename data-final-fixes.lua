@@ -153,6 +153,9 @@ function This_MOD.get_elements()
                     Space.recipe = GMOD.recipes[Space.item.name]
                     Space.tech = GMOD.get_technology(Space.recipe)
 
+                    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+                    --- Ajustar la receta a usar
                     if not Space.tech then
                         if Space.recipe then
                             Space.recipe = Space.recipe[1]
@@ -170,6 +173,8 @@ function This_MOD.get_elements()
                             if Space.recipe.name then break end
                         end
                     end
+
+                    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
                     --- Guardar la información
                     This_MOD.to_be_prosecuted[entity.type] = This_MOD.to_be_prosecuted[entity.type] or {}
