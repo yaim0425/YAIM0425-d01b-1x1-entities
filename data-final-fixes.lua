@@ -150,7 +150,7 @@ function This_MOD.get_elements()
 
                     --- Valores para el proceso
                     Space.entity = entity
-                    Space.recipe = GMOD.recipes[Space.item.name] or nil
+                    Space.recipe = GMOD.recipes[Space.item.name]
                     Space.tech = GMOD.get_technology(Space.recipe)
 
                     --- Guardar la información
