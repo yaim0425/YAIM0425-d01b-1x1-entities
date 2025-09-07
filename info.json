@@ -5,6 +5,7 @@
   "author": "YAIM904",
   "factorio_version": "2.0",
   "description": "Micro miniature versions of assemblers, electric furnaces, etc. [[I accept suggestions]]",
+  "homepage": "https://github.com/yaim0425/YAIM0425-i5MOD00-1x1-entities",
   "dependencies": [
     "YAIM0425-i5MOD50-core"
   ]
