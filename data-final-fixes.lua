@@ -135,37 +135,98 @@ end
 function This_MOD.get_elements()
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Buscar las entidades a afectar
-    for _, entity in pairs(GMOD.entities) do
-        if This_MOD.types[entity.type] then
-            local Space = {}
-            Space.item = GMOD.get_item_create_entity(entity)
-            if Space.item then
-                if
-                    not This_MOD.prosecuted[entity.type] or
-                    (
-                        This_MOD.prosecuted[entity.type] and
-                        not This_MOD.prosecuted[entity.type][Space.item.name]
-                    )
-                then
-                    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Función para analizar cada entidades
+    local function valide(entity)
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Validación
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-                    --- Valores para el proceso
-                    Space.entity = entity
-                    Space.recipe = GMOD.recipes[Space.item.name]
-                    Space.tech = GMOD.get_technology(Space.recipe)
-                    Space.recipe = Space.recipe and Space.recipe[1] or nil
+        --- Validar el tipo
+        if not This_MOD.types[entity.type] then return end
 
-                    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Validar el item
+        local Space = {}
+        Space.item = GMOD.get_item_create_entity(entity)
+        if not Space.item then return end
 
-                    --- Guardar la información
-                    This_MOD.to_be_prosecuted[entity.type] = This_MOD.to_be_prosecuted[entity.type] or {}
-                    This_MOD.to_be_prosecuted[entity.type][entity.name] = Space
+        --- Validar si ya fue procesado
+        if
+            This_MOD.prosecuted[entity.type] and
+            This_MOD.prosecuted[entity.type][Space.item.name]
+        then
+            return
+        end
 
-                    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-                end
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Conexiones externas
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        --- Agrupar las conexiones a mover
+        local Connections = GMOD.get_tables(entity, "pipe_connections", nil, true) or {}
+
+        --- Agregar las conexiones de calor
+        if entity.energy_source then
+            if entity.energy_source.type == "heat" then
+                table.insert(Connections, { pipe_connections = entity.energy_source.connections })
             end
         end
+
+        --- Agregar las conexiones de buffer de calor
+        if entity.heat_buffer then
+            table.insert(Connections, { pipe_connections = entity.heat_buffer.connections })
+        end
+
+        --- Extraer las conexiones (máximo 4)
+        local Count = 0
+        for _, t in pairs(Connections) do
+            for _, _ in pairs(t.pipe_connections or {}) do
+                if Count == 4 then return end
+                Count = Count + 1
+            end
+        end
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Valores para el proceso
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        Space.entity = entity
+        Space.recipe = GMOD.recipes[Space.item.name]
+        Space.tech = GMOD.get_technology(Space.recipe)
+        Space.recipe = Space.recipe and Space.recipe[1] or nil
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Guardar la información
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        This_MOD.to_be_prosecuted[entity.type] = This_MOD.to_be_prosecuted[entity.type] or {}
+        This_MOD.to_be_prosecuted[entity.type][entity.name] = Space
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Buscar las entidades a afectar
+    for _, entity in pairs(GMOD.entities) do
+        valide(entity)
     end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
