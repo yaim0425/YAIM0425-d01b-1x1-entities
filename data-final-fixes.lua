@@ -79,6 +79,44 @@ function This_MOD.setting_mod()
     This_MOD.to_be_prosecuted = {}
     This_MOD.prosecuted = {}
 
+    --- Tipos a afectar
+    This_MOD.types = {
+        ["accumulator"] = true,
+        ["assembling-machine"] = true,
+        ["beacon"] = true,
+        ["boiler"] = true,
+        ["furnace"] = true,
+        -- ["fusion-generator"] = true, --- No tengo el DLC
+        -- ["fusion-reactor"] = true, --- No tengo el DLC
+        ["generator"] = true,
+        ["mining-drill"] = true,
+        ["radar"] = true,
+        ["reactor"] = true,
+        ["solar-panel"] = true,
+        ["storage-tank"] = true,
+    }
+
+    --- Corrección en la escala
+    This_MOD.scale = 0.25
+
+    --- Cajas a 1x1
+    This_MOD.collision_box = { { -0.3, -0.3 }, { 0.3, 0.3 } }
+    This_MOD.selection_box = { { -0.5, -0.5 }, { 0.5, 0.5 } }
+
+    This_MOD.selection_box_str =
+        This_MOD.selection_box[1][1] .. " x " .. This_MOD.selection_box[1][2]
+        .. "   " ..
+        This_MOD.selection_box[2][1] .. " x " .. This_MOD.selection_box[2][2]
+
+    --- Indicador del mod
+    This_MOD.graphics = "__" .. This_MOD.prefix .. This_MOD.name .. "__/graphics/"
+    This_MOD.indicator = {
+        icon = This_MOD.graphics .. "indicator.png",
+        scale = 0.25,
+        icon_size = 192,
+        tint = { r = 0, g = 1, b = 0 }
+    }
+
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
