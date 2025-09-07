@@ -140,10 +140,10 @@ function This_MOD.get_elements()
             Space.item = GMOD.get_item_create_entity(entity)
             if Space.item then
                 if
-                    not This_MOD.prosecuted[entity] or
+                    not This_MOD.prosecuted[entity.type] or
                     (
-                        This_MOD.prosecuted[entity] and
-                        not This_MOD.prosecuted[entity][Space.item.name]
+                        This_MOD.prosecuted[entity.type] and
+                        not This_MOD.prosecuted[entity.type][Space.item.name]
                     )
                 then
                     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
