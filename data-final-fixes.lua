@@ -48,6 +48,7 @@ function This_MOD.start()
             This_MOD.create_recipe(space)
             This_MOD.create_item(space)
             This_MOD.create_entity(space)
+            This_MOD.create_tech(space)
 
             --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
         end
@@ -110,6 +111,8 @@ function This_MOD.setting_mod()
         icon_size = 192,
         tint = { r = 0, g = 1, b = 0 }
     }
+    This_MOD.indicator_tech = GMOD.copy(This_MOD.indicator)
+    This_MOD.indicator_tech.scale = 1
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -685,6 +688,88 @@ function This_MOD.create_entity(space)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     GMOD.extend(Entity)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+---------------------------------------------------------------------------
+
+function This_MOD.create_tech(space)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Validación
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    if not space.tech then return end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Duplicar el elemento
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    local Tech = GMOD.copy(space.tech)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Cambiar algunas propiedades
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    This_MOD.tech = This_MOD.tech or {}
+    This_MOD.tech[space.tech.name] = This_MOD.tech[space.tech.name] or 1
+
+    while true do
+        Tech.name =
+            This_MOD.prefix ..
+            This_MOD.tech[space.tech.name] .. "-" ..
+            GMOD.delete_prefix(space.tech.name)
+        if data.raw.technology[Tech.name] then
+            This_MOD.tech[space.tech.name] = This_MOD.tech[space.tech.name] + 1
+        else
+            break
+        end
+    end
+
+    Tech.icons = GMOD.copy(space.item.icons)
+    table.insert(Tech.icons, This_MOD.indicator_tech)
+
+    Tech.localised_name = space.item.localised_name
+    Tech.localised_description = nil
+
+    Tech.prerequisites = { space.tech.name }
+
+    Tech.effects = { {
+        type = "unlock-recipe",
+        recipe = This_MOD.prefix .. GMOD.delete_prefix(space.item.name)
+    } }
+
+    if Tech.research_trigger then
+        Tech.research_trigger = {
+            type = "craft-item",
+            item = space.item.name,
+            count = 1
+        }
+    end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    ---- Crear el prototipo
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    GMOD.extend(Tech)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
