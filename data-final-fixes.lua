@@ -493,7 +493,12 @@ function This_MOD.create_entity(space)
 
     --- Elimnar lo inecesario
     if Entity.pictures then
-        for _, value in pairs({ "fluid_background", "window_background", "flow_sprite", "gas_flow" }) do
+        for _, value in pairs({
+            "fluid_background",
+            "window_background",
+            "flow_sprite",
+            "gas_flow"
+        }) do
             Entity.pictures[value] = nil
         end
     end
@@ -691,8 +696,6 @@ function This_MOD.create_entity(space)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
-
----------------------------------------------------------------------------
 
 function This_MOD.create_tech(space)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
