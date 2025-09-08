@@ -723,16 +723,16 @@ function This_MOD.create_tech(space)
     --- Cambiar algunas propiedades
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    This_MOD.tech = This_MOD.tech or {}
-    This_MOD.tech[space.tech.name] = This_MOD.tech[space.tech.name] or 1
+    This_MOD.count = This_MOD.count or {}
+    This_MOD.count[space.tech.name] = This_MOD.count[space.tech.name] or 1
 
     while true do
         Tech.name =
             This_MOD.prefix ..
-            This_MOD.tech[space.tech.name] .. "-" ..
+            This_MOD.count[space.tech.name] .. "-" ..
             GMOD.delete_prefix(space.tech.name)
         if data.raw.technology[Tech.name] then
-            This_MOD.tech[space.tech.name] = This_MOD.tech[space.tech.name] + 1
+            This_MOD.count[space.tech.name] = This_MOD.count[space.tech.name] + 1
         else
             break
         end
