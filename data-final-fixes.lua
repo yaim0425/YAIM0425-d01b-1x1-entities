@@ -393,7 +393,7 @@ function This_MOD.create_entity(space)
 
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-    --- Salida de la prodicción
+    --- Salida de la producción
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     if Entity.vector_to_place_result then
