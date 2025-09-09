@@ -176,7 +176,7 @@ function This_MOD.get_elements()
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Agrupar las conexiones
-        local Connections = GMOD.get_tables(entity, "pipe_connections", nil, true) or {}
+        local Connections = GMOD.get_tables(entity, "pipe_connections", nil) or {}
 
         --- Agregar las conexiones de calor
         if entity.energy_source then
@@ -537,7 +537,7 @@ function This_MOD.create_entity(space)
         local Value = Entity[Property]
 
         --- Escalar las imagenes
-        for _, value in pairs(GMOD.get_tables(Value, "filename", nil, true) or {}) do
+        for _, value in pairs(GMOD.get_tables(Value, "filename", nil) or {}) do
             value.scale = (value.scale or 1) * This_MOD.new_scale
             if value.shift then
                 value.shift[1] = value.shift[1] * This_MOD.new_scale
@@ -581,7 +581,7 @@ function This_MOD.create_entity(space)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Escalar circuit connectors
-    for _, value in pairs(GMOD.get_tables(Entity.circuit_connector, "filename", nil, true) or {}) do
+    for _, value in pairs(GMOD.get_tables(Entity.circuit_connector, "filename", nil) or {}) do
         if value.scale then
             value.scale = value.scale * This_MOD.new_scale
         end
@@ -592,7 +592,7 @@ function This_MOD.create_entity(space)
     end
 
     --- Escalar los puntos
-    for _, value in pairs(GMOD.get_tables(Entity.circuit_connector, "points", nil, true) or {}) do
+    for _, value in pairs(GMOD.get_tables(Entity.circuit_connector, "points", nil) or {}) do
         for _, point in pairs(value.points) do
             for _, pos in pairs(point) do
                 pos[1] = pos[1] * This_MOD.new_scale
@@ -612,7 +612,7 @@ function This_MOD.create_entity(space)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Agrupar las conexiones a mover
-    local Connections = GMOD.get_tables(Entity, "pipe_connections", nil, true) or {}
+    local Connections = GMOD.get_tables(Entity, "pipe_connections", nil) or {}
 
     if Entity.energy_source then
         if Entity.energy_source.type == "heat" then
