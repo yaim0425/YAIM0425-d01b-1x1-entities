@@ -94,6 +94,12 @@ function This_MOD.setting_mod()
     --- Corrección en la escala
     This_MOD.scale = 0.25
 
+    --- Tiempo de creación de las recetas
+    This_MOD.time = 5 * 60
+    --- def. 300 segundos (5m)
+    --- Min. 1 segundos
+    --- Max. 65535 segundos (18h 12m 15s)
+
     --- Cajas a 1x1
     This_MOD.collision_box = { { -0.3, -0.3 }, { 0.3, 0.3 } }
     This_MOD.selection_box = { { -0.5, -0.5 }, { 0.5, 0.5 } }
@@ -268,7 +274,7 @@ function This_MOD.create_recipe(space)
     Recipe.name = This_MOD.prefix .. GMOD.delete_prefix(space.item.name)
 
     Recipe.main_product = nil
-    Recipe.energy_required = 5 * 60 --- 5 minutos
+    Recipe.energy_required = This_MOD.time
 
     Recipe.icons = GMOD.copy(space.item.icons)
     table.insert(Recipe.icons, This_MOD.indicator)
