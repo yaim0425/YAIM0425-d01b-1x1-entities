@@ -737,7 +737,7 @@ function This_MOD.create_tech(space)
     if That_MOD then
         Prefix = GMOD.name .. That_MOD.ids .. This_MOD.id .. "-"
     end
-    Tech.name = Prefix .. space.item.name .. "--tech"
+    Tech.name = Prefix .. "-" .. space.item.name .. "--tech"
 
     Tech.icons = GMOD.copy(space.item.icons)
     table.insert(Tech.icons, This_MOD.indicator_tech)
