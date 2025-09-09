@@ -732,16 +732,20 @@ function This_MOD.create_tech(space)
     --- Cambiar algunas propiedades
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    This_MOD.count = This_MOD.count or {}
-    This_MOD.count[space.tech.name] = This_MOD.count[space.tech.name] or 1
+    This_MOD.count = This_MOD.count or 1
+    local That_MOD = GMOD.get_id_and_name(Tech.name)
+    local Prefix = This_MOD.prefix
+    if That_MOD then
+        Prefix = GMOD.name .. That_MOD.ids .. This_MOD.id .. "-"
+    end
 
     while true do
         Tech.name =
-            This_MOD.prefix ..
-            This_MOD.count[space.tech.name] .. "-" ..
-            GMOD.delete_prefix(space.tech.name)
+            Prefix ..
+            space.item.name ..
+            "tech" .. This_MOD.count
         if data.raw.technology[Tech.name] then
-            This_MOD.count[space.tech.name] = This_MOD.count[space.tech.name] + 1
+            This_MOD.count = This_MOD.count + 1
         else
             break
         end
