@@ -742,7 +742,7 @@ function This_MOD.create_tech(space)
     while true do
         Tech.name =
             Prefix ..
-            space.item.name ..
+            space.item.name .. "-" ..
             "tech" .. This_MOD.count
         if data.raw.technology[Tech.name] then
             This_MOD.count = This_MOD.count + 1
