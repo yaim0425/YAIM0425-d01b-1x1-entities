@@ -505,28 +505,28 @@ function This_MOD.create_entity(space)
 
     --- Buscar en cada propiedad
     for _, Property in pairs({
+        "active_animation",
+        "animation",
+        "base_picture",
+        "chargable_graphics",
+        "connection_patches_connected",
+        "connection_patches_disconnected",
+        "graphics_set",
+        "heat_buffer",
+        "heat_connection_patches_connected",
+        "heat_connection_patches_disconnected",
+        "heat_lower_layer_picture",
+        "horizontal_animation",
+        "idle_animation",
+        "integration_patch",
+        "lower_layer_picture",
         "overlay",
         "picture",
         "pictures",
-        "animation",
-        "heat_buffer",
-        "base_picture",
-        "graphics_set",
-        "idle_animation",
-        "active_animation",
-        "water_reflection",
-        "integration_patch",
-        "chargable_graphics",
         "vertical_animation",
-        "lower_layer_picture",
-        "horizontal_animation",
-        "working_light_picture",
+        "water_reflection",
         "wet_mining_graphics_set",
-        "heat_lower_layer_picture",
-        "connection_patches_connected",
-        "connection_patches_disconnected",
-        "heat_connection_patches_connected",
-        "heat_connection_patches_disconnected"
+        "working_light_picture"
     }) do
         local Value = Entity[Property]
 
