@@ -74,6 +74,9 @@ function This_MOD.setting_mod()
     This_MOD.to_be_prosecuted = {}
     This_MOD.prosecuted = This_MOD.prosecuted or {}
 
+    --- Cargar las opciones en setting-final-fixes.lua
+    This_MOD.setting = GMOD.setting[This_MOD.id]
+
     --- Tipos a afectar
     This_MOD.types = {
         ["accumulator"] = true,
@@ -95,10 +98,10 @@ function This_MOD.setting_mod()
     This_MOD.scale = 0.25
 
     --- Tiempo de creación de las recetas
-    This_MOD.time = 5 * 60
-    --- def. 300 segundos (5m)
+    This_MOD.time = This_MOD.setting.time
     --- Min. 1 segundos
-    --- Max. 65535 segundos (18h 12m 15s)
+    --- Max. 65000 segundos (18h)
+    --- def. 300 segundos (5m)
 
     --- Cajas a 1x1
     This_MOD.collision_box = { { -0.3, -0.3 }, { 0.3, 0.3 } }
