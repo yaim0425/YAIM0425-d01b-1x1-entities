@@ -75,7 +75,7 @@ function This_MOD.setting_mod()
     This_MOD.prosecuted = This_MOD.prosecuted or {}
 
     --- Cargar las opciones en setting-final-fixes.lua
-    This_MOD.setting = GMOD.setting[This_MOD.id]
+    This_MOD.setting = GMOD.setting[This_MOD.id] or {}
 
     --- Indicador del mod
     This_MOD.graphics = "__" .. This_MOD.prefix .. This_MOD.name .. "__/graphics/"
