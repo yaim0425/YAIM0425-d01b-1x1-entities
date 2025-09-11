@@ -138,34 +138,35 @@ end
 
 function This_MOD.get_elements()
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Función para analizar cada elemento
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Función para analizar cada entidades
-    local function valide(entity)
+    local function valide(element)
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
         --- Validación
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Validar el tipo
-        if not This_MOD.types[entity.type] then return end
+        if not This_MOD.types[element.type] then return end
 
         --- Validar el item
         local Space = {}
-        Space.item = GMOD.get_item_create(entity, "place_result")
+        Space.item = GMOD.get_item_create(element, "place_result")
         if not Space.item then return end
 
         --- Validar si ya fue procesado
         if
-            This_MOD.prosecuted[entity.type] and
-            This_MOD.prosecuted[entity.type][Space.item.name]
+            This_MOD.prosecuted[element.type] and
+            This_MOD.prosecuted[element.type][Space.item.name]
         then
             return
         end
 
         --- Evitar las entidades 1x1
         local Selection_box_str =
-            entity.selection_box[1][1] .. " x " .. entity.selection_box[1][2]
+            element.selection_box[1][1] .. " x " .. element.selection_box[1][2]
             .. "   " ..
-            entity.selection_box[2][1] .. " x " .. entity.selection_box[2][2]
+            element.selection_box[2][1] .. " x " .. element.selection_box[2][2]
         if Selection_box_str == This_MOD.selection_box_str then return end
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -179,18 +180,18 @@ function This_MOD.get_elements()
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Agrupar las conexiones
-        local Connections = GMOD.get_tables(entity, "pipe_connections", nil) or {}
+        local Connections = GMOD.get_tables(element, "pipe_connections", nil) or {}
 
         --- Agregar las conexiones de calor
-        if entity.energy_source then
-            if entity.energy_source.type == "heat" then
-                table.insert(Connections, { pipe_connections = entity.energy_source.connections })
+        if element.energy_source then
+            if element.energy_source.type == "heat" then
+                table.insert(Connections, { pipe_connections = element.energy_source.connections })
             end
         end
 
         --- Agregar las conexiones de buffer de calor
-        if entity.heat_buffer then
-            table.insert(Connections, { pipe_connections = entity.heat_buffer.connections })
+        if element.heat_buffer then
+            table.insert(Connections, { pipe_connections = element.heat_buffer.connections })
         end
 
         --- Validación de las conexiones (4 máximo)
@@ -212,7 +213,7 @@ function This_MOD.get_elements()
         --- Valores para el proceso
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-        Space.entity = entity
+        Space.entity = element
         Space.recipe = GMOD.recipes[Space.item.name]
         Space.tech = GMOD.get_technology(Space.recipe)
         Space.recipe = Space.recipe and Space.recipe[1] or nil
@@ -227,15 +228,22 @@ function This_MOD.get_elements()
         --- Guardar la información
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-        This_MOD.to_be_prosecuted[entity.type] = This_MOD.to_be_prosecuted[entity.type] or {}
-        This_MOD.to_be_prosecuted[entity.type][entity.name] = Space
+        This_MOD.to_be_prosecuted[element.type] = This_MOD.to_be_prosecuted[element.type] or {}
+        This_MOD.to_be_prosecuted[element.type][element.name] = Space
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     --- Buscar las entidades a afectar
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     for _, entity in pairs(GMOD.entities) do
         valide(entity)
     end
