@@ -150,7 +150,7 @@ function This_MOD.get_elements()
 
         --- Validar el item
         local Space = {}
-        Space.item = GMOD.get_item_create_entity(entity)
+        Space.item = GMOD.get_item_create_entity(entity, "place_result")
         if not Space.item then return end
 
         --- Validar si ya fue procesado
