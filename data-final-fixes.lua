@@ -81,7 +81,7 @@ function This_MOD.setting_mod()
 
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-    --- Valores de la referencia
+    --- Valores de la referencia en todos los MODs
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Contenedor de los elementos que el MOD modoficó o modificará
@@ -109,7 +109,7 @@ function This_MOD.setting_mod()
 
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-    --- Valores a usar
+    --- Valores de la referencia en este MOD
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Tipos a afectar
