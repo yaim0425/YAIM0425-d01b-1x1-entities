@@ -463,11 +463,22 @@ function This_MOD.create_entity(space)
 
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Duplicar el elemento
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    local Entity = GMOD.copy(space.entity)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     --- Información importante
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Valores a usar
-    local Entity = GMOD.copy(space.entity)
     local Collision_box = space.entity.collision_box
     local Width = Collision_box[2][1] - Collision_box[1][1]
     local Height = Collision_box[2][2] - Collision_box[1][2]
