@@ -172,6 +172,32 @@ function This_MOD.setting_mod()
         }
     }
 
+    --- Rutas donde buscar las imagenes
+    This_MOD.image_path = {
+        "active_animation",
+        "animation",
+        "base_picture",
+        "chargable_graphics",
+        "connection_patches_connected",
+        "connection_patches_disconnected",
+        "graphics_set",
+        "heat_buffer",
+        "heat_connection_patches_connected",
+        "heat_connection_patches_disconnected",
+        "heat_lower_layer_picture",
+        "horizontal_animation",
+        "idle_animation",
+        "integration_patch",
+        "lower_layer_picture",
+        "overlay",
+        "picture",
+        "pictures",
+        "vertical_animation",
+        "water_reflection",
+        "wet_mining_graphics_set",
+        "working_light_picture"
+    }
+
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
@@ -570,30 +596,7 @@ function This_MOD.create_entity(space)
     end
 
     --- Buscar en cada propiedad
-    for _, Property in pairs({
-        "active_animation",
-        "animation",
-        "base_picture",
-        "chargable_graphics",
-        "connection_patches_connected",
-        "connection_patches_disconnected",
-        "graphics_set",
-        "heat_buffer",
-        "heat_connection_patches_connected",
-        "heat_connection_patches_disconnected",
-        "heat_lower_layer_picture",
-        "horizontal_animation",
-        "idle_animation",
-        "integration_patch",
-        "lower_layer_picture",
-        "overlay",
-        "picture",
-        "pictures",
-        "vertical_animation",
-        "water_reflection",
-        "wet_mining_graphics_set",
-        "working_light_picture"
-    }) do
+    for _, Property in pairs(This_MOD.image_path) do
         local Value = Entity[Property]
 
         --- Escalar las imagenes
