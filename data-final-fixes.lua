@@ -241,9 +241,7 @@ function This_MOD.get_elements()
         if
             This_MOD.processed[element.type] and
             This_MOD.processed[element.type][Space.item.name]
-        then
-            return
-        end
+        then return end
 
         --- Evitar las entidades 1x1
         local Selection_box_str =
