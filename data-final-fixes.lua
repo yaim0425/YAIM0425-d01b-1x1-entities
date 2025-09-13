@@ -123,6 +123,31 @@ function This_MOD.setting_mod()
         .. "   " ..
         This_MOD.selection_box[2][1] .. " x " .. This_MOD.selection_box[2][2]
 
+
+    --- Prioridad (Inversa → Derecha → Izquierda)
+    This_MOD.priority = {
+        [defines.direction.north] = {
+            defines.direction.south,
+            defines.direction.east,
+            defines.direction.west
+        },
+        [defines.direction.south] = {
+            defines.direction.north,
+            defines.direction.west,
+            defines.direction.east
+        },
+        [defines.direction.east] = {
+            defines.direction.west,
+            defines.direction.south,
+            defines.direction.north
+        },
+        [defines.direction.west] = {
+            defines.direction.east,
+            defines.direction.north,
+            defines.direction.south
+        }
+    }
+
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
@@ -635,30 +660,6 @@ function This_MOD.create_entity(space)
         table.insert(Connections, { pipe_connections = Entity.heat_buffer.connections })
     end
 
-    --- Prioridad (Inversa → Derecha → Izquierda)
-    local Priority = {
-        [defines.direction.north] = {
-            defines.direction.south,
-            defines.direction.east,
-            defines.direction.west
-        },
-        [defines.direction.south] = {
-            defines.direction.north,
-            defines.direction.west,
-            defines.direction.east
-        },
-        [defines.direction.east] = {
-            defines.direction.west,
-            defines.direction.south,
-            defines.direction.north
-        },
-        [defines.direction.west] = {
-            defines.direction.east,
-            defines.direction.north,
-            defines.direction.south
-        }
-    }
-
     --- Direcciones ocupadas
     local Used = {}
 
@@ -673,7 +674,7 @@ function This_MOD.create_entity(space)
                 conn.direction = Dir
             else
                 -- Buscar alternativa
-                for _, alt in ipairs(Priority[Dir]) do
+                for _, alt in ipairs(This_MOD.priority[Dir]) do
                     if not Used[alt] then
                         Used[alt] = true
                         conn.direction = alt
