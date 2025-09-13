@@ -34,13 +34,13 @@ function This_MOD.start()
     This_MOD.get_elements()
 
     --- Modificar los elementos
-    for iKey, spaces in pairs(This_MOD.to_be_prosecuted) do
+    for iKey, spaces in pairs(This_MOD.to_be_processed) do
         for jKey, space in pairs(spaces) do
             --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
             --- Marcar como procesado
-            This_MOD.prosecuted[iKey] = This_MOD.prosecuted[iKey] or {}
-            This_MOD.prosecuted[iKey][jKey] = true
+            This_MOD.processed[iKey] = This_MOD.processed[iKey] or {}
+            This_MOD.processed[iKey][jKey] = true
 
             --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -72,7 +72,7 @@ function This_MOD.setting_mod()
     --- Validar si se cargó antes
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    if This_MOD.prosecuted then return end
+    if This_MOD.processed then return end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -85,8 +85,8 @@ function This_MOD.setting_mod()
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Contenedor de los elementos que el MOD modoficó o modificará
-    This_MOD.to_be_prosecuted = {}
-    This_MOD.prosecuted = {}
+    This_MOD.to_be_processed = {}
+    This_MOD.processed = {}
 
     --- Cargar las opciones en setting-final-fixes.lua
     This_MOD.setting = GMOD.setting[This_MOD.id] or {}
@@ -231,8 +231,8 @@ function This_MOD.get_elements()
 
         --- Validar si ya fue procesado
         if
-            This_MOD.prosecuted[element.type] and
-            This_MOD.prosecuted[element.type][Space.item.name]
+            This_MOD.processed[element.type] and
+            This_MOD.processed[element.type][Space.item.name]
         then
             return
         end
@@ -303,8 +303,8 @@ function This_MOD.get_elements()
         --- Guardar la información
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-        This_MOD.to_be_prosecuted[element.type] = This_MOD.to_be_prosecuted[element.type] or {}
-        This_MOD.to_be_prosecuted[element.type][element.name] = Space
+        This_MOD.to_be_processed[element.type] = This_MOD.to_be_processed[element.type] or {}
+        This_MOD.to_be_processed[element.type][element.name] = Space
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
@@ -319,7 +319,7 @@ function This_MOD.get_elements()
     --- Buscar las entidades a afectar
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    This_MOD.to_be_prosecuted = {}
+    This_MOD.to_be_processed = {}
     for _, entity in pairs(GMOD.entities) do
         valide(entity)
     end
@@ -576,9 +576,9 @@ function This_MOD.create_entity(space)
     } }
 
     if Entity.next_upgrade then
-        if This_MOD.to_be_prosecuted[Entity.type] and This_MOD.to_be_prosecuted[Entity.type][Entity.next_upgrade] then
+        if This_MOD.to_be_processed[Entity.type] and This_MOD.to_be_processed[Entity.type][Entity.next_upgrade] then
             Entity.next_upgrade = This_MOD.prefix .. GMOD.delete_prefix(Entity.next_upgrade)
-        elseif This_MOD.prosecuted[Entity.type] and This_MOD.prosecuted[Entity.type][Entity.next_upgrade] then
+        elseif This_MOD.processed[Entity.type] and This_MOD.processed[Entity.type][Entity.next_upgrade] then
             Entity.next_upgrade = This_MOD.prefix .. GMOD.delete_prefix(Entity.next_upgrade)
         else
             Entity.next_upgrade = nil
