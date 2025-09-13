@@ -319,6 +319,7 @@ function This_MOD.get_elements()
     --- Buscar las entidades a afectar
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+    This_MOD.to_be_prosecuted = {}
     for _, entity in pairs(GMOD.entities) do
         valide(entity)
     end
