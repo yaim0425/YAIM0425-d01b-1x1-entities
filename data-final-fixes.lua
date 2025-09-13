@@ -198,6 +198,14 @@ function This_MOD.setting_mod()
         "working_light_picture"
     }
 
+    --- Propiedades de Entity.pictures a eliminar
+    This_MOD.delete_pictures = {
+        "fluid_background",
+        "window_background",
+        "flow_sprite",
+        "gas_flow"
+    }
+
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
@@ -597,12 +605,7 @@ function This_MOD.create_entity(space)
 
     --- Elimnar lo inecesario
     if Entity.pictures then
-        for _, value in pairs({
-            "fluid_background",
-            "window_background",
-            "flow_sprite",
-            "gas_flow"
-        }) do
+        for _, value in pairs(This_MOD.delete_pictures) do
             Entity.pictures[value] = nil
         end
     end
