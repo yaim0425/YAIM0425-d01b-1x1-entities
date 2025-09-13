@@ -134,19 +134,19 @@ function This_MOD.setting_mod()
 
     --- Tiempo de creación de las recetas
     This_MOD.time = This_MOD.setting.time
-    --- Min. 1 segundos
-    --- Max. 65000 segundos (18h)
-    --- def. 300 segundos (5m)
+    --- Min. 1 (1s)
+    --- Max. 65000 (18h)
+    --- Def. 300 (5m)
 
     --- Cajas a 1x1
     This_MOD.collision_box = { { -0.3, -0.3 }, { 0.3, 0.3 } }
     This_MOD.selection_box = { { -0.5, -0.5 }, { 0.5, 0.5 } }
 
+    --- Caja de selection_box en string para evitar las entidades 1x1
     This_MOD.selection_box_str =
         This_MOD.selection_box[1][1] .. " x " .. This_MOD.selection_box[1][2]
         .. "   " ..
         This_MOD.selection_box[2][1] .. " x " .. This_MOD.selection_box[2][2]
-
 
     --- Prioridad (Inversa → Derecha → Izquierda)
     This_MOD.priority = {
