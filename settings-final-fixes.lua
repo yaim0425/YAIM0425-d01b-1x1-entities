@@ -39,7 +39,7 @@ GMOD[This_MOD.id] = This_MOD
 --- Opciones
 This_MOD.setting = {}
 
---- Opcion: armor_base
+--- Opcion: time
 table.insert(This_MOD.setting, {
     type = "int",
     name = "time",
