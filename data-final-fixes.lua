@@ -69,10 +69,24 @@ end
 
 function This_MOD.setting_mod()
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Validar si se cargó antes
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    if This_MOD.prosecuted then return end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Valores de la referencia
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Contenedor de los elementos que el MOD modoficó o modificará
     This_MOD.to_be_prosecuted = {}
-    This_MOD.prosecuted = This_MOD.prosecuted or {}
+    This_MOD.prosecuted = {}
 
     --- Cargar las opciones en setting-final-fixes.lua
     This_MOD.setting = GMOD.setting[This_MOD.id] or {}
@@ -87,6 +101,16 @@ function This_MOD.setting_mod()
     }
     This_MOD.indicator_tech = GMOD.copy(This_MOD.indicator)
     This_MOD.indicator_tech.scale = 1
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Valores a usar
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Tipos a afectar
     This_MOD.types = {
