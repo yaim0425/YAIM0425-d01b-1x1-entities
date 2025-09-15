@@ -371,6 +371,8 @@ function This_MOD.create_recipe(space)
     Recipe.icons = GMOD.copy(space.item.icons)
     table.insert(Recipe.icons, This_MOD.indicator)
 
+    Recipe.enabled = space.tech == nil
+
     local Order = tonumber(Recipe.order) + 1
     Recipe.order = GMOD.pad_left_zeros(#Recipe.order, Order)
 
