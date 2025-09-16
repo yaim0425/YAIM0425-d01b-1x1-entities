@@ -126,7 +126,7 @@ function This_MOD.setting_mod()
         ["radar"] = true,
         ["reactor"] = true,
         ["solar-panel"] = true,
-        ["storage-tank"] = true,
+        ["storage-tank"] = true
     }
 
     --- Corrección en la escala
@@ -322,8 +322,10 @@ function This_MOD.get_elements()
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     This_MOD.to_be_processed = {}
-    for item_name, entity in pairs(GMOD.entities) do
-        valide(GMOD.items[item_name], entity)
+    for entity_type, _ in pairs(This_MOD.types) do
+        for _, entity in pairs(data.raw[entity_type]) do
+            valide(GMOD.get_item_create(entity, "place_result"), entity)
+        end
     end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
