@@ -363,6 +363,7 @@ function This_MOD.create_recipe(space)
     Recipe.name = This_MOD.prefix .. GMOD.delete_prefix(space.item.name)
 
     Recipe.main_product = nil
+    Recipe.maximum_productivity = 1000000
     Recipe.energy_required = This_MOD.setting.time
     --- Min. 1 (1s)
     --- Max. 65000 (18h)
