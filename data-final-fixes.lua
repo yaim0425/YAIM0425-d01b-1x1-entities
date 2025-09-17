@@ -223,9 +223,6 @@ function This_MOD.get_elements()
         --- Validación
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-        --- Validar el tipo
-        if not This_MOD.types[entity.type] then return end
-
         --- Validar el item
         if not item then return end
 
