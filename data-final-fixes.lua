@@ -45,9 +45,9 @@ function This_MOD.start()
             --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
             --- Crear los elementos
-            This_MOD.create_recipe(space)
             This_MOD.create_item(space)
             This_MOD.create_entity(space)
+            This_MOD.create_recipe(space)
             This_MOD.create_tech(space)
 
             --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -223,11 +223,11 @@ function This_MOD.get_elements()
         --- Validación
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-        --- Validar el tipo
-        if not This_MOD.types[entity.type] then return end
-
         --- Validar el item
         if not item then return end
+
+        --- Validar el tipo
+        if not This_MOD.types[entity.type] then return end
 
         --- Validar si ya fue procesado
         if
@@ -291,9 +291,15 @@ function This_MOD.get_elements()
         local Space = {}
         Space.item = item
         Space.entity = entity
+
         Space.recipe = GMOD.recipes[Space.item.name]
         Space.tech = GMOD.get_technology(Space.recipe)
         Space.recipe = Space.recipe and Space.recipe[1] or nil
+
+        Space.prefix =
+            GMOD.name ..
+            (GMOD.get_id_and_name(item.name) or { ids = "-" }).ids ..
+            This_MOD.id .. "-" .. item.name
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -331,79 +337,6 @@ end
 
 ---------------------------------------------------------------------------
 
-function This_MOD.create_recipe(space)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-    --- Validación
-    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    if not space.recipe then return end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-    --- Duplicar el elemento
-    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    local Recipe = GMOD.copy(space.recipe)
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-    --- Cambiar algunas propiedades
-    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    Recipe.name = This_MOD.prefix .. GMOD.delete_prefix(space.item.name)
-
-    Recipe.main_product = nil
-    Recipe.maximum_productivity = 1000000
-    Recipe.energy_required = This_MOD.setting.time
-    --- Min. 1 (1s)
-    --- Max. 65000 (18h)
-    --- Def. 300 (5m)
-
-    Recipe.icons = GMOD.copy(space.item.icons)
-    table.insert(Recipe.icons, This_MOD.indicator)
-
-    Recipe.enabled = space.tech == nil
-
-    local Order = tonumber(Recipe.order) + 1
-    Recipe.order = GMOD.pad_left_zeros(#Recipe.order, Order)
-
-    Recipe.ingredients = { {
-        type = "item",
-        name = space.item.name,
-        amount = 1
-    } }
-
-    Recipe.results = { {
-        type = "item",
-        name = Recipe.name,
-        amount = 1
-    } }
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-    --- Crear el prototipo
-    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    GMOD.extend(Recipe)
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-end
-
 function This_MOD.create_item(space)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     --- Validación
@@ -433,9 +366,9 @@ function This_MOD.create_item(space)
     --- Cambiar algunas propiedades
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    Item.name = This_MOD.prefix .. GMOD.delete_prefix(space.item.name)
+    Item.name = space.prefix
 
-    Item.place_result = This_MOD.prefix .. GMOD.delete_prefix(space.item.name)
+    Item.place_result = Item.name
 
     table.insert(Item.icons, This_MOD.indicator)
 
@@ -567,7 +500,7 @@ function This_MOD.create_entity(space)
     --- Cambiar algunas propiedades
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    Entity.name = This_MOD.prefix .. GMOD.delete_prefix(space.item.name)
+    Entity.name = space.prefix
 
     Entity.alert_icon_shift = nil
 
@@ -584,11 +517,29 @@ function This_MOD.create_entity(space)
     } }
 
     if Entity.next_upgrade then
-        if This_MOD.to_be_processed[Entity.type] and This_MOD.to_be_processed[Entity.type][Entity.next_upgrade] then
-            Entity.next_upgrade = This_MOD.prefix .. GMOD.delete_prefix(Entity.next_upgrade)
-        elseif This_MOD.processed[Entity.type] and This_MOD.processed[Entity.type][Entity.next_upgrade] then
-            Entity.next_upgrade = This_MOD.prefix .. GMOD.delete_prefix(Entity.next_upgrade)
-        else
+        local function validate()
+            for _, values in pairs({
+                This_MOD.to_be_processed,
+                This_MOD.processed
+            }) do
+                for _, value in pairs(values) do
+                    if value[Entity.next_upgrade] then
+                        local That_MOD =
+                            GMOD.get_id_and_name(Entity.next_upgrade) or
+                            { ids = "-", name = space.item.name }
+
+                        Entity.next_upgrade =
+                            GMOD.name .. That_MOD.ids ..
+                            This_MOD.id .. "-" ..
+                            That_MOD.name
+
+                        return true
+                    end
+                end
+            end
+        end
+
+        if not validate() then
             Entity.next_upgrade = nil
         end
     end
@@ -740,6 +691,7 @@ function This_MOD.create_entity(space)
     --- Agregar los indicadores del mod
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+    Entity.icons = GMOD.copy(space.item.icons)
     table.insert(Entity.icons, This_MOD.indicator)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -753,6 +705,79 @@ function This_MOD.create_entity(space)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     GMOD.extend(Entity)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+function This_MOD.create_recipe(space)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Validación
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    if not space.recipe then return end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Duplicar el elemento
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    local Recipe = GMOD.copy(space.recipe)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Cambiar algunas propiedades
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    Recipe.name = space.prefix
+
+    Recipe.main_product = nil
+    Recipe.maximum_productivity = 1000000
+    Recipe.energy_required = This_MOD.setting.time
+    --- Min. 1 (1s)
+    --- Max. 65000 (18h)
+    --- Def. 300 (5m)
+
+    Recipe.icons = GMOD.copy(space.item.icons)
+    table.insert(Recipe.icons, This_MOD.indicator)
+
+    Recipe.enabled = space.tech == nil
+
+    local Order = tonumber(Recipe.order) + 1
+    Recipe.order = GMOD.pad_left_zeros(#Recipe.order, Order)
+
+    Recipe.ingredients = { {
+        type = "item",
+        name = space.item.name,
+        amount = 1
+    } }
+
+    Recipe.results = { {
+        type = "item",
+        name = Recipe.name,
+        amount = 1
+    } }
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Crear el prototipo
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    GMOD.extend(Recipe)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -786,12 +811,7 @@ function This_MOD.create_tech(space)
     --- Cambiar algunas propiedades
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    local That_MOD = GMOD.get_id_and_name(Tech.name)
-    local Prefix = This_MOD.prefix
-    if That_MOD then
-        Prefix = GMOD.name .. That_MOD.ids .. This_MOD.id .. "-"
-    end
-    Tech.name = Prefix .. "-" .. space.item.name .. "--tech"
+    Tech.name = space.prefix .. "-tech"
 
     Tech.icons = GMOD.copy(space.item.icons)
     table.insert(Tech.icons, This_MOD.indicator_tech)
@@ -803,7 +823,7 @@ function This_MOD.create_tech(space)
 
     Tech.effects = { {
         type = "unlock-recipe",
-        recipe = This_MOD.prefix .. GMOD.delete_prefix(space.item.name)
+        recipe = space.prefix
     } }
 
     if Tech.research_trigger then
