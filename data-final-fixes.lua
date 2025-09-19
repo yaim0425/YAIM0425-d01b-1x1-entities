@@ -533,7 +533,7 @@ function This_MOD.create_entity(space)
                     return
                         GMOD.name .. That_MOD.ids ..
                         This_MOD.id .. "-" ..
-                        That_MOD.name
+                        Entity.next_upgrade
                 end
             end
         end
