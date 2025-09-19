@@ -528,12 +528,12 @@ function This_MOD.create_entity(space)
                 if value[Entity.next_upgrade] then
                     local That_MOD =
                         GMOD.get_id_and_name(Entity.next_upgrade) or
-                        { ids = "-", name = space.item.name }
+                        { ids = "-", name = space.entity.next_upgrade }
 
                     return
                         GMOD.name .. That_MOD.ids ..
                         This_MOD.id .. "-" ..
-                        Entity.next_upgrade
+                        That_MOD.name
                 end
             end
         end
