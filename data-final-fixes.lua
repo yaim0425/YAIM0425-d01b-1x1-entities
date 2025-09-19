@@ -516,33 +516,30 @@ function This_MOD.create_entity(space)
         amount = 1
     } }
 
-    if Entity.next_upgrade then
-        local function validate()
-            for _, values in pairs({
-                This_MOD.to_be_processed,
-                This_MOD.processed
-            }) do
-                for _, value in pairs(values) do
-                    if value[Entity.next_upgrade] then
-                        local That_MOD =
-                            GMOD.get_id_and_name(Entity.next_upgrade) or
-                            { ids = "-", name = space.item.name }
+    local function next_upgrade()
+        if not Entity.next_upgrade then
+            return
+        end
+        for _, values in pairs({
+            This_MOD.to_be_processed,
+            This_MOD.processed
+        }) do
+            for _, value in pairs(values) do
+                if value[Entity.next_upgrade] then
+                    local That_MOD =
+                        GMOD.get_id_and_name(Entity.next_upgrade) or
+                        { ids = "-", name = space.item.name }
 
-                        Entity.next_upgrade =
-                            GMOD.name .. That_MOD.ids ..
-                            This_MOD.id .. "-" ..
-                            That_MOD.name
-
-                        return true
-                    end
+                    return
+                        GMOD.name .. That_MOD.ids ..
+                        This_MOD.id .. "-" ..
+                        That_MOD.name
                 end
             end
         end
-
-        if not validate() then
-            Entity.next_upgrade = nil
-        end
     end
+
+    Entity.next_upgrade = next_upgrade()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
