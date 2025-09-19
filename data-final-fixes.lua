@@ -298,8 +298,8 @@ function This_MOD.get_elements()
 
         Space.prefix =
             GMOD.name ..
-            (GMOD.get_id_and_name(item.name) or { ids = "-" }).ids ..
-            This_MOD.id .. "-" .. item.name
+            (GMOD.get_id_and_name(entity.name) or { ids = "-" }).ids ..
+            This_MOD.id .. "-" .. entity.name
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
