@@ -744,11 +744,10 @@ function This_MOD.create_recipe(space)
     Recipe.localised_description = GMOD.copy(space.entity.localised_description)
 
     Recipe.main_product = nil
+
     Recipe.maximum_productivity = 1000000
+
     Recipe.energy_required = This_MOD.setting.time
-    --- Min. 1 (1s)
-    --- Max. 65000 (18h)
-    --- Def. 300 (5m)
 
     Recipe.icons = GMOD.copy(space.item.icons)
     table.insert(Recipe.icons, This_MOD.indicator)
