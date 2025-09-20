@@ -368,6 +368,9 @@ function This_MOD.create_item(space)
 
     Item.name = space.prefix
 
+    Item.localised_name = GMOD.copy(space.entity.localised_name)
+    Item.localised_description = GMOD.copy(space.entity.localised_description)
+
     Item.place_result = Item.name
 
     table.insert(Item.icons, This_MOD.indicator)
