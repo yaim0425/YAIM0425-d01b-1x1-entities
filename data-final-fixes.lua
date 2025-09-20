@@ -814,7 +814,7 @@ function This_MOD.create_tech(space)
     table.insert(Tech.icons, This_MOD.indicator_tech)
 
     Tech.localised_name = space.item.localised_name
-    Tech.localised_description = nil
+    Tech.localised_description = { "" }
 
     Tech.prerequisites = { space.tech.name }
 
