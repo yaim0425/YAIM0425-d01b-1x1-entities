@@ -740,6 +740,9 @@ function This_MOD.create_recipe(space)
 
     Recipe.name = space.prefix
 
+    Recipe.localised_name = GMOD.copy(space.entity.localised_name)
+    Recipe.localised_description = GMOD.copy(space.entity.localised_description)
+
     Recipe.main_product = nil
     Recipe.maximum_productivity = 1000000
     Recipe.energy_required = This_MOD.setting.time
