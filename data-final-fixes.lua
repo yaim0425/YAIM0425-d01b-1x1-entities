@@ -521,7 +521,7 @@ function This_MOD.create_entity(space)
         amount = 1
     } }
 
-    local function next_upgrade()
+    Entity.next_upgrade = (function()
         if not Entity.next_upgrade then
             return
         end
@@ -542,9 +542,7 @@ function This_MOD.create_entity(space)
                 end
             end
         end
-    end
-
-    Entity.next_upgrade = next_upgrade()
+    end)()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
