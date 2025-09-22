@@ -534,12 +534,12 @@ function This_MOD.create_entity(space)
         --- Validación
         if not Entity.next_upgrade then return end
 
-        --- Procesar el nombre del siguiente tier
+        --- Procesar el nombre
         local That_MOD =
             GMOD.get_id_and_name(Entity.next_upgrade) or
             { ids = "-", name = Entity.next_upgrade }
 
-        --- Nombre del siguiente tier
+        --- Nombre despes de ser procesado
         local New_name =
             GMOD.name .. That_MOD.ids ..
             This_MOD.id .. "-" ..
