@@ -87,12 +87,14 @@ function This_MOD.setting_mod()
 
     --- Indicador del mod
     This_MOD.graphics = "__" .. This_MOD.prefix .. This_MOD.name .. "__/graphics/"
+
     This_MOD.indicator = {
         icon = This_MOD.graphics .. "indicator.png",
         scale = 0.25,
         icon_size = 192,
         tint = { r = 0, g = 1, b = 0 }
     }
+
     This_MOD.indicator_tech = GMOD.copy(This_MOD.indicator)
     This_MOD.indicator_tech.scale = 1
 
