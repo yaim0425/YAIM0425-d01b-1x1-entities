@@ -541,7 +541,7 @@ function This_MOD.create_entity(space)
             GMOD.get_id_and_name(Entity.next_upgrade) or
             { ids = "-", name = Entity.next_upgrade }
 
-        --- Nombre despes de ser procesado
+        --- Nombre despes de aplicar el MOD
         local New_name =
             GMOD.name .. That_MOD.ids ..
             This_MOD.id .. "-" ..
