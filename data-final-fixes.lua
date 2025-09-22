@@ -368,15 +368,20 @@ function This_MOD.create_item(space)
     --- Cambiar algunas propiedades
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+    --- Nombre
     Item.name = space.name
 
+    --- Apodo y descripción
     Item.localised_name = GMOD.copy(space.entity.localised_name)
     Item.localised_description = GMOD.copy(space.entity.localised_description)
 
+    --- Entidad a crear
     Item.place_result = Item.name
 
+    --- Agregar indicador del MOD
     table.insert(Item.icons, This_MOD.indicator)
 
+    --- Actualizar Order
     local Order = tonumber(Item.order) + 1
     Item.order = GMOD.pad_left_zeros(#Item.order, Order)
 
