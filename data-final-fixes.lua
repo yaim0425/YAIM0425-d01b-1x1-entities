@@ -540,21 +540,21 @@ function This_MOD.create_entity(space)
             { ids = "-", name = Entity.next_upgrade }
 
         --- Nombre del siguiente tier
-        local Next_upgrade =
+        local New_name =
             GMOD.name .. That_MOD.ids ..
             This_MOD.id .. "-" ..
             That_MOD.name
 
         --- La entidad ya existe
-        if GMOD.entities[Next_upgrade] ~= nil then
-            return Next_upgrade
+        if GMOD.entities[New_name] ~= nil then
+            return New_name
         end
 
         --- La entidad existirá
         for _, Spaces in pairs(This_MOD.to_be_processed) do
             for _, Space in pairs(Spaces) do
                 if Space.entity.name == Entity.next_upgrade then
-                    return Next_upgrade
+                    return New_name
                 end
             end
         end
