@@ -322,7 +322,7 @@ function This_MOD.get_elements()
 
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-    --- Buscar las entidades a afectar
+    --- Preparar los datos a usar
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     for item_name, entity in pairs(GMOD.entities) do
