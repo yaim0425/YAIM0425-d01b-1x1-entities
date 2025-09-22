@@ -235,19 +235,16 @@ function This_MOD.get_elements()
         if Selection_box_str == This_MOD.selection_box_str then return end
 
         --- Validar si ya fue procesado
-        local Name
-        repeat
-            local That_MOD =
-                GMOD.get_id_and_name(entity.name) or
-                { ids = "-", name = entity.name }
+        local That_MOD =
+            GMOD.get_id_and_name(entity.name) or
+            { ids = "-", name = entity.name }
 
-            Name =
-                GMOD.name .. That_MOD.ids ..
-                This_MOD.id .. "-" ..
-                That_MOD.name
+        local Name =
+            GMOD.name .. That_MOD.ids ..
+            This_MOD.id .. "-" ..
+            That_MOD.name
 
-            if GMOD.entities[Name] ~= nil then return end
-        until true
+        if GMOD.entities[Name] ~= nil then return end
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
