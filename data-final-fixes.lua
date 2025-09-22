@@ -759,6 +759,9 @@ function This_MOD.create_recipe(space)
     Recipe.localised_name = GMOD.copy(space.entity.localised_name)
     Recipe.localised_description = GMOD.copy(space.entity.localised_description)
 
+    --- Tiempo de fabricación
+    Recipe.energy_required = 3 * (Recipe.energy_required or 0.5)
+
     --- Elimnar propiedades inecesarias
     Recipe.main_product = nil
 
