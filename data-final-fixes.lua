@@ -532,16 +532,16 @@ function This_MOD.create_entity(space)
     } }
 
     --- Siguiente tier
-    Entity.next_upgrade = (function(element)
+    Entity.next_upgrade = (function(name)
         --- Validación
-        if not element then return end
+        if not name then return end
 
         --- Procesar el nombre
         local That_MOD =
-            GMOD.get_id_and_name(element) or
-            { ids = "-", name = element }
+            GMOD.get_id_and_name(name) or
+            { ids = "-", name = name }
 
-        --- Nombre despes de aplicar el MOD
+        --- Nombre despues de aplicar el MOD
         local New_name =
             GMOD.name .. That_MOD.ids ..
             This_MOD.id .. "-" ..
@@ -555,7 +555,7 @@ function This_MOD.create_entity(space)
         --- La entidad existirá
         for _, Spaces in pairs(This_MOD.to_be_processed) do
             for _, Space in pairs(Spaces) do
-                if Space.entity.name == element then
+                if Space.entity.name == name then
                     return New_name
                 end
             end
