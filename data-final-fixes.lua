@@ -345,6 +345,7 @@ function This_MOD.create_item(space)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     if not space.item then return end
+    if GMOD.items[space.name] then return end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -406,6 +407,7 @@ function This_MOD.create_entity(space)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     if not space.entity then return end
+    if GMOD.entities[space.name] then return end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -731,6 +733,7 @@ function This_MOD.create_recipe(space)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     if not space.recipe then return end
+    if data.raw.recipe[space.name] then return end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -816,6 +819,7 @@ function This_MOD.create_tech(space)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     if not space.tech then return end
+    if data.raw.technology[space.name .. "-tech"] then return end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -839,12 +843,12 @@ function This_MOD.create_tech(space)
     --- Cambiar algunas propiedades
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Bine
-    Tech.name = space.prefix .. "-tech"
+    --- Nombre
+    Tech.name = space.name .. "-tech"
 
     --- Apodo y descripción
     Tech.localised_name = GMOD.copy(space.entity.localised_name)
-    Tech.localised_description = { "" }
+    Tech.localised_description = GMOD.copy(space.entity.localised_description)
 
     --- Icono
     Tech.icons = GMOD.copy(space.item.icons)
