@@ -299,8 +299,6 @@ function This_MOD.get_elements()
         Space.tech = GMOD.get_technology(Space.recipe)
         Space.recipe = Space.recipe and Space.recipe[1] or nil
 
-        Space.prefix = Name
-
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 
@@ -755,7 +753,7 @@ function This_MOD.create_recipe(space)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Nombre
-    Recipe.name = space.prefix
+    Recipe.name = space.name
 
     --- Apodo y descripción
     Recipe.localised_name = GMOD.copy(space.entity.localised_name)
@@ -854,7 +852,7 @@ function This_MOD.create_tech(space)
     --- Efecto de la tech
     Tech.effects = { {
         type = "unlock-recipe",
-        recipe = space.prefix
+        recipe = space.name
     } }
 
     --- Tech se activa con una fabricación
