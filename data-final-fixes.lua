@@ -770,9 +770,6 @@ function This_MOD.create_recipe(space)
     --- Productividad
     Recipe.maximum_productivity = 1000000
 
-    --- Tiempo de fabricación
-    Recipe.energy_required = This_MOD.setting.time
-
     --- Icono
     Recipe.icons = GMOD.copy(space.item.icons)
     table.insert(Recipe.icons, This_MOD.indicator)
