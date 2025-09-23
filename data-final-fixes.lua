@@ -519,6 +519,10 @@ function This_MOD.create_entity(space)
     Entity.collision_box = This_MOD.collision_box
     Entity.selection_box = This_MOD.selection_box
 
+    --- Cambiar icono
+    Entity.icons = GMOD.copy(space.item.icons)
+    table.insert(Entity.icons, This_MOD.indicator)
+
     --- Objeto a minar
     Entity.minable.results = { {
         type = "item",
@@ -693,19 +697,6 @@ function This_MOD.create_entity(space)
             conn.position = { 0, 0 }
         end
     end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-    --- Agregar los indicadores del mod
-    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    Entity.icons = GMOD.copy(space.item.icons)
-    table.insert(Entity.icons, This_MOD.indicator)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
