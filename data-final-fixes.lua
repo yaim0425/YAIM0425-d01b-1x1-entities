@@ -12,6 +12,7 @@
 
 local This_MOD = GMOD.get_id_and_name()
 if not This_MOD then return end
+table.insert(GMOD.MODs, This_MOD)
 
 ---------------------------------------------------------------------------
 
@@ -48,10 +49,11 @@ function This_MOD.start()
     end
 
     --- Recorrer los MODs activados
-    GMOD.MODs[This_MOD.id] = This_MOD
-    for ID, That_MOD in pairs(GMOD.MODs) do
-        if ID ~= This_MOD.id then
-            That_MOD.start()
+    if GMOD.MODs[#GMOD.MODs] == This_MOD then
+        for _, That_MOD in pairs(GMOD.MODs) do
+            if That_MOD ~= This_MOD then
+                That_MOD.start()
+            end
         end
     end
 
