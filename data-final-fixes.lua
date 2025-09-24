@@ -12,7 +12,6 @@
 
 local This_MOD = GMOD.get_id_and_name()
 if not This_MOD then return end
-GMOD[This_MOD.id] = This_MOD
 
 ---------------------------------------------------------------------------
 
@@ -45,6 +44,14 @@ function This_MOD.start()
             This_MOD.create_tech(Space)
 
             --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        end
+    end
+
+    --- Recorrer los MODs activados
+    GMOD.MODs[This_MOD.id] = This_MOD
+    for ID, That_MOD in pairs(GMOD.MODs) do
+        if ID ~= This_MOD.id then
+            That_MOD.start()
         end
     end
 
