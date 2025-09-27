@@ -254,6 +254,7 @@ function This_MOD.get_elements()
             That_MOD.name
 
         if GMOD.entities[Name] ~= nil then return end
+        if GMOD.has_id(entity.name, This_MOD.id) then return end
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
