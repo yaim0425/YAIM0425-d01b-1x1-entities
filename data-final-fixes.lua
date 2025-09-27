@@ -12,7 +12,7 @@
 
 local This_MOD = GMOD.get_id_and_name()
 if not This_MOD then return end
-table.insert(GMOD.MODs, This_MOD)
+GMOD.mods[This_MOD.id] = This_MOD
 
 ---------------------------------------------------------------------------
 
