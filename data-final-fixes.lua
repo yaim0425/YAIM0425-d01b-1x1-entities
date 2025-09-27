@@ -12,7 +12,7 @@
 
 local This_MOD = GMOD.get_id_and_name()
 if not This_MOD then return end
-GMOD.mods[This_MOD.id] = This_MOD
+GMOD[This_MOD.id] = This_MOD
 
 ---------------------------------------------------------------------------
 
