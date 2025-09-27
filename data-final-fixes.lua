@@ -244,6 +244,8 @@ function This_MOD.get_elements()
         if Selection_box_str == This_MOD.selection_box_str then return end
 
         --- Validar si ya fue procesado
+        if GMOD.has_id(entity.name, This_MOD.id) then return end
+
         local That_MOD =
             GMOD.get_id_and_name(entity.name) or
             { ids = "-", name = entity.name }
@@ -254,7 +256,6 @@ function This_MOD.get_elements()
             That_MOD.name
 
         if GMOD.entities[Name] ~= nil then return end
-        if GMOD.has_id(entity.name, This_MOD.id) then return end
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
