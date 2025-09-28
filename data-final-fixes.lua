@@ -563,6 +563,10 @@ function This_MOD.create_entity(space)
         end
     end)(Entity.next_upgrade)
 
+    --- Igualar las categorías
+    Entity.crafting_categories = space.entity.crafting_categories
+    Entity.resource_categories = space.entity.resource_categories
+
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 
