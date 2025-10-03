@@ -289,6 +289,25 @@ function This_MOD.get_elements()
 
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Accumuladores especiales
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        repeat
+            if entity.type ~= "accumulator" then break end
+            if not entity.energy_source then break end
+            if not entity.energy_source.output_flow_limit then return end
+            local Energy = entity.energy_source.output_flow_limit
+            Energy = GMOD.number_unit(Energy)
+            if not Energy then return end
+        until true
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
         --- Valores para el proceso
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
