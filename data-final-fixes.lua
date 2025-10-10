@@ -180,6 +180,30 @@ function This_MOD.reference_values()
         "gas_flow"
     }
 
+    --- Lista de entidades a ignorar
+    This_MOD.ignore_entities = {
+        --- Space Exploration
+        ["se-space-pipe-long-j-3"] = true,
+        ["se-space-pipe-long-j-5"] = true,
+        ["se-space-pipe-long-j-7"] = true,
+        ["se-space-pipe-long-s-9"] = true,
+        ["se-space-pipe-long-s-15"] = true,
+
+        ["se-condenser-turbine"] = true,
+        ["se-energy-transmitter-emitter"] = true,
+        ["se-energy-transmitter-injector"] = true,
+
+        ["se-delivery-cannon"] = true,
+        ["se-spaceship-rocket-engine"] = true,
+        ["se-spaceship-ion-engine"] = true,
+        ["se-spaceship-antimatter-engine"] = true,
+
+        ["se-meteor-point-defence-container"] = true,
+        ["se-meteor-defence-container"] = true,
+        ["se-delivery-cannon-weapon"] = true,
+        ["shield-projector"] = true
+    }
+
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
@@ -229,6 +253,9 @@ function This_MOD.get_elements()
             That_MOD.name
 
         if GMOD.entities[Name] ~= nil then return end
+
+        --- Ignorar las entidades enlistadas
+        if This_MOD.ignore_entities[That_MOD.name] then return end
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
