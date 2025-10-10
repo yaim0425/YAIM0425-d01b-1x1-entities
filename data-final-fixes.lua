@@ -571,21 +571,21 @@ function This_MOD.create_entity(space)
             { ids = "-", name = name }
 
         --- Nombre despues de aplicar el MOD
-        local New_name =
+        local Name =
             GMOD.name .. That_MOD.ids ..
             This_MOD.id .. "-" ..
             That_MOD.name
 
         --- La entidad ya existe
-        if GMOD.entities[New_name] ~= nil then
-            return New_name
+        if GMOD.entities[Name] ~= nil then
+            return Name
         end
 
         --- La entidad existirá
         for _, Spaces in pairs(This_MOD.to_be_processed) do
             for _, Space in pairs(Spaces) do
                 if Space.entity.name == name then
-                    return New_name
+                    return Name
                 end
             end
         end
