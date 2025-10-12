@@ -74,7 +74,7 @@ function This_MOD.reference_values()
         icon = This_MOD.path_graphics .. "indicator.png",
         scale = 0.25,
         icon_size = 192,
-        tint = { r = 0, g = 1, b = 0 }
+        tint = { r = 0, g = 255, b = 0 }
     }
 
     This_MOD.indicator_tech = GMOD.copy(This_MOD.indicator)
