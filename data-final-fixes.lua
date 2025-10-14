@@ -407,9 +407,38 @@ function This_MOD.create_item(space)
     --- Agregar indicador del MOD
     table.insert(Item.icons, This_MOD.indicator)
 
-    --- Actualizar Order
-    local Order = tonumber(Item.order) + 1
-    Item.order = GMOD.pad_left_zeros(#Item.order, Order)
+    --- Nombre del nuevo subgrupo
+    That_MOD =
+        GMOD.get_id_and_name(Item.subgroup) or
+        { ids = "-", name = Item.subgroup }
+
+    Item.subgroup =
+        GMOD.name .. That_MOD.ids ..
+        This_MOD.id .. "-" ..
+        That_MOD.name
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Crear el subgrupo para el objeto
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Duplicar el subgrupo
+    if not GMOD.subgroups[Item.subgroup] then
+        GMOD.duplicate_subgroup(space.item.subgroup, Item.subgroup)
+
+        --- Renombrar
+        local Subgroup = GMOD.subgroups[Item.subgroup]
+        local Order = GMOD.subgroups[space.item.subgroup].order
+
+        --- Actualizar el order
+        Order = tonumber(Order) + 1 * (10 ^ (#Order - 1))
+        Subgroup.order = tostring(Order)
+    end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
