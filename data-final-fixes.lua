@@ -40,6 +40,9 @@ function This_MOD.start()
         end
     end
 
+    --- Fijar las posiciones actual
+    GMOD.d00b.change_orders()
+
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
@@ -436,8 +439,7 @@ function This_MOD.create_item(space)
         local Order = GMOD.subgroups[space.item.subgroup].order
 
         --- Actualizar el order
-        Order = tonumber(Order) + 1 * (10 ^ (#Order - 1))
-        Subgroup.order = tostring(Order)
+        Subgroup.order = 1 .. Order
     end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
