@@ -439,7 +439,7 @@ function This_MOD.create_item(space)
         local Order = GMOD.subgroups[space.item.subgroup].order
 
         --- Actualizar el order
-        Subgroup.order = 1 .. Order
+        Subgroup.order = 1 .. Order:sub(2)
     end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
