@@ -829,8 +829,7 @@ function This_MOD.create_recipe(space)
     Recipe.enabled = space.tech == nil
 
     --- Actualizar Order
-    local Order = tonumber(Recipe.order) + 1
-    Recipe.order = GMOD.pad_left_zeros(#Recipe.order, Order)
+    Recipe.subgroup = GMOD.items[space.name].subgroup
 
     --- Ingredientes
     Recipe.ingredients = { {
