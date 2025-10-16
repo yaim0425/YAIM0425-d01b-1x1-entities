@@ -828,7 +828,7 @@ function This_MOD.create_recipe(space)
     --- Habilitar la receta
     Recipe.enabled = space.tech == nil
 
-    --- Actualizar Order
+    --- Nombre del nuevo subgrupo
     Recipe.subgroup = GMOD.items[space.name].subgroup
 
     --- Ingredientes
