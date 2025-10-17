@@ -195,6 +195,7 @@ function This_MOD.reference_values()
         ["se-condenser-turbine"] = true,
         ["se-energy-transmitter-emitter"] = true,
         ["se-energy-transmitter-injector"] = true,
+        ["se-core-miner-drill"] = true,
 
         ["se-delivery-cannon"] = true,
         ["se-spaceship-rocket-engine"] = true,
@@ -572,6 +573,7 @@ function This_MOD.create_entity(space)
     Entity.name = space.name
 
     --- Elimnar propiedades inecesarias
+    Entity.placeable_by = nil
     Entity.alert_icon_shift = nil
     Entity.icons_positioning = nil
     Entity.icon_draw_specification = nil
@@ -648,7 +650,7 @@ function This_MOD.create_entity(space)
         local Value = Entity[Property]
 
         --- Escalar las imagenes
-        for _, value in pairs(GMOD.get_tables(Value, "filename", nil) or {}) do
+        for _, value in pairs(GMOD.get_tables(Value, "filename") or {}) do
             value.scale = (value.scale or 1) * This_MOD.new_scale
             if value.shift then
                 value.shift[1] = value.shift[1] * This_MOD.new_scale
