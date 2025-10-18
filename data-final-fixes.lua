@@ -40,6 +40,9 @@ function This_MOD.start()
         end
     end
 
+    --- Fijar las posiciones actual
+    GMOD.d00b.change_orders()
+
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
@@ -74,7 +77,7 @@ function This_MOD.reference_values()
         icon = This_MOD.path_graphics .. "indicator.png",
         scale = 0.25,
         icon_size = 192,
-        tint = { r = 0, g = 1, b = 0 }
+        tint = { r = 255, g = 0, b = 255 }
     }
 
     This_MOD.indicator_tech = GMOD.copy(This_MOD.indicator)
@@ -180,6 +183,31 @@ function This_MOD.reference_values()
         "gas_flow"
     }
 
+    --- Lista de entidades a ignorar
+    This_MOD.ignore_entities = {
+        --- Space Exploration
+        ["se-space-pipe-long-j-3"] = true,
+        ["se-space-pipe-long-j-5"] = true,
+        ["se-space-pipe-long-j-7"] = true,
+        ["se-space-pipe-long-s-9"] = true,
+        ["se-space-pipe-long-s-15"] = true,
+
+        ["se-condenser-turbine"] = true,
+        ["se-energy-transmitter-emitter"] = true,
+        ["se-energy-transmitter-injector"] = true,
+        ["se-core-miner-drill"] = true,
+
+        ["se-delivery-cannon"] = true,
+        ["se-spaceship-rocket-engine"] = true,
+        ["se-spaceship-ion-engine"] = true,
+        ["se-spaceship-antimatter-engine"] = true,
+
+        ["se-meteor-point-defence-container"] = true,
+        ["se-meteor-defence-container"] = true,
+        ["se-delivery-cannon-weapon"] = true,
+        ["shield-projector"] = true
+    }
+
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
@@ -229,6 +257,9 @@ function This_MOD.get_elements()
             That_MOD.name
 
         if GMOD.entities[Name] ~= nil then return end
+
+        --- Ignorar las entidades enlistadas
+        if This_MOD.ignore_entities[That_MOD.name] then return end
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -380,9 +411,37 @@ function This_MOD.create_item(space)
     --- Agregar indicador del MOD
     table.insert(Item.icons, This_MOD.indicator)
 
-    --- Actualizar Order
-    local Order = tonumber(Item.order) + 1
-    Item.order = GMOD.pad_left_zeros(#Item.order, Order)
+    --- Nombre del nuevo subgrupo
+    That_MOD =
+        GMOD.get_id_and_name(Item.subgroup) or
+        { ids = "-", name = Item.subgroup }
+
+    Item.subgroup =
+        GMOD.name .. That_MOD.ids ..
+        This_MOD.id .. "-" ..
+        That_MOD.name
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Crear el subgrupo para el objeto
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Duplicar el subgrupo
+    if not GMOD.subgroups[Item.subgroup] then
+        GMOD.duplicate_subgroup(space.item.subgroup, Item.subgroup)
+
+        --- Renombrar
+        local Subgroup = GMOD.subgroups[Item.subgroup]
+        local Order = GMOD.subgroups[space.item.subgroup].order
+
+        --- Actualizar el order
+        Subgroup.order = 0 .. Order:sub(2)
+    end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -514,6 +573,7 @@ function This_MOD.create_entity(space)
     Entity.name = space.name
 
     --- Elimnar propiedades inecesarias
+    Entity.placeable_by = nil
     Entity.alert_icon_shift = nil
     Entity.icons_positioning = nil
     Entity.icon_draw_specification = nil
@@ -534,31 +594,31 @@ function This_MOD.create_entity(space)
     } }
 
     --- Siguiente tier
-    Entity.next_upgrade = (function(name)
+    Entity.next_upgrade = (function(entity)
         --- Validación
-        if not name then return end
+        if not entity then return end
 
         --- Procesar el nombre
         local That_MOD =
-            GMOD.get_id_and_name(name) or
-            { ids = "-", name = name }
+            GMOD.get_id_and_name(entity) or
+            { ids = "-", name = entity }
 
         --- Nombre despues de aplicar el MOD
-        local New_name =
+        local Name =
             GMOD.name .. That_MOD.ids ..
             This_MOD.id .. "-" ..
             That_MOD.name
 
         --- La entidad ya existe
-        if GMOD.entities[New_name] ~= nil then
-            return New_name
+        if GMOD.entities[Name] ~= nil then
+            return Name
         end
 
         --- La entidad existirá
         for _, Spaces in pairs(This_MOD.to_be_processed) do
             for _, Space in pairs(Spaces) do
-                if Space.entity.name == name then
-                    return New_name
+                if Space.entity.name == entity then
+                    return Name
                 end
             end
         end
@@ -590,7 +650,7 @@ function This_MOD.create_entity(space)
         local Value = Entity[Property]
 
         --- Escalar las imagenes
-        for _, value in pairs(GMOD.get_tables(Value, "filename", nil) or {}) do
+        for _, value in pairs(GMOD.get_tables(Value, "filename") or {}) do
             value.scale = (value.scale or 1) * This_MOD.new_scale
             if value.shift then
                 value.shift[1] = value.shift[1] * This_MOD.new_scale
@@ -763,10 +823,6 @@ function This_MOD.create_recipe(space)
     --- Elimnar propiedades inecesarias
     Recipe.main_product = nil
 
-    --- Productividad
-    Recipe.allow_productivity = true
-    Recipe.maximum_productivity = 1000000
-
     --- Cambiar icono
     Recipe.icons = GMOD.copy(space.item.icons)
     table.insert(Recipe.icons, This_MOD.indicator)
@@ -774,9 +830,8 @@ function This_MOD.create_recipe(space)
     --- Habilitar la receta
     Recipe.enabled = space.tech == nil
 
-    --- Actualizar Order
-    local Order = tonumber(Recipe.order) + 1
-    Recipe.order = GMOD.pad_left_zeros(#Recipe.order, Order)
+    --- Nombre del nuevo subgrupo
+    Recipe.subgroup = GMOD.items[space.name].subgroup
 
     --- Ingredientes
     Recipe.ingredients = { {
