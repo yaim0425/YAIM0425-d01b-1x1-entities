@@ -256,7 +256,7 @@ function This_MOD.get_elements()
             This_MOD.id .. "-" ..
             That_MOD.name
 
-        if GMOD.entities[Name] ~= nil then return end
+        if GMOD.entities[Name] then return end
 
         --- Ignorar las entidades enlistadas
         if This_MOD.ignore_entities[That_MOD.name] then return end
@@ -610,9 +610,7 @@ function This_MOD.create_entity(space)
             That_MOD.name
 
         --- La entidad ya existe
-        if GMOD.entities[Name] ~= nil then
-            return Name
-        end
+        if GMOD.entities[Name] then return Name end
 
         --- La entidad existirá
         for _, Spaces in pairs(This_MOD.to_be_processed) do
