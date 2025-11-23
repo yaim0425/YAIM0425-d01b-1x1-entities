@@ -262,6 +262,10 @@ function This_MOD.get_elements()
         --- Ignorar las entidades enlistadas
         if This_MOD.ignore_entities[That_MOD.name] then return end
 
+        --- Sin recompensa
+        if not entity.minable then return end
+        if not entity.minable.results then return end
+
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 
