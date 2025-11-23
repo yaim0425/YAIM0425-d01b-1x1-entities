@@ -335,7 +335,7 @@ function This_MOD.get_elements()
         Space.name = Name
 
         Space.recipe = GMOD.recipes[Space.item.name]
-        Space.tech = GMOD.get_technology(Space.recipe)
+        Space.tech = GMOD.get_technology(Space.recipe, true)
         Space.recipe = Space.recipe and Space.recipe[1] or nil
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
