@@ -246,6 +246,7 @@ function This_MOD.get_elements()
 
         --- Validar si ya fue procesado
         if GMOD.has_id(entity.name, This_MOD.id) then return end
+        if GMOD.d13b and GMOD.has_id(entity.name, GMOD.d13b.id) then return end
 
         local That_MOD =
             GMOD.get_id_and_name(entity.name) or
@@ -260,6 +261,10 @@ function This_MOD.get_elements()
 
         --- Ignorar las entidades enlistadas
         if This_MOD.ignore_entities[That_MOD.name] then return end
+
+        --- Sin recompensa
+        if not entity.minable then return end
+        if not entity.minable.results then return end
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -330,7 +335,7 @@ function This_MOD.get_elements()
         Space.name = Name
 
         Space.recipe = GMOD.recipes[Space.item.name]
-        Space.tech = GMOD.get_technology(Space.recipe)
+        Space.tech = GMOD.get_technology(Space.recipe, true)
         Space.recipe = Space.recipe and Space.recipe[1] or nil
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
