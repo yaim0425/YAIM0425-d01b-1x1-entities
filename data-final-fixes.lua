@@ -664,7 +664,7 @@ function This_MOD.create_entity(space)
         --- Ajustar los puntos
         local Points = Value and Value.working_visualisations
         local Waypoints = Value and Value.shift_animation_waypoints
-        for dir, _ in pairs((Waypoints or Points) and util.direction_vectors or {}) do
+        for dir, _ in pairs((Waypoints or Points) and defines.direction or {}) do
             for _, value in pairs((Waypoints and Waypoints[dir]) and Waypoints[dir] or {}) do
                 value[1] = value[1] * Factor[1]
                 value[2] = value[2] * Factor[2]
