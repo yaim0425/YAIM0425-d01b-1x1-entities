@@ -50,8 +50,10 @@ Each 1×1 machine has its **own item, recipe, and technology**, clearly marked s
 
 ## 🖼️ Screenshots
 
-![Screenshot 1](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/blob/main/screenshot/\(1\).png)
-![Screenshot 2](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/blob/main/screenshot/\(2\).png)
-![Screenshot 3](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/blob/main/screenshot/\(3\).png)
+![Screenshot 1](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/blob/main/screenshot/(1).png)
+
+![Screenshot 2](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/blob/main/screenshot/(2).png)
+
+![Screenshot 3](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/blob/main/screenshot/(3).png)
 
 ---
