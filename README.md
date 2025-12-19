@@ -23,7 +23,6 @@ Supported machines include (depending on what MODs you have installed):
 * Beacons
 * Solar panels
 * Accumulators
-* Reactors
 * Boilers and generators
 * Turrets and radars
 * Storage tanks
