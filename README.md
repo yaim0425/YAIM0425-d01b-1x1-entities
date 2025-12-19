@@ -23,7 +23,6 @@ Supported machines include (depending on what MODs you have installed):
 * Beacons
 * Solar panels
 * Accumulators
-* Reactors
 * Boilers and generators
 * Turrets and radars
 * Storage tanks
@@ -69,3 +68,7 @@ Each 1×1 machine has its **own item, recipe, and technology**, clearly marked s
 ![Screenshot 9](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/raw/code/screenshot/(9).png)
 
 ---
+
+## ❤️ Support
+
+Suggestions, ideas, and balance feedback are welcome on the GitHub repository.
