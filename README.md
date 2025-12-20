@@ -27,13 +27,7 @@ Supported machines include (depending on what MODs you have installed):
 * Turrets and radars
 * Storage tanks
 
-Each 1×1 machine has its **own item, recipe, and technology**, clearly marked so you can easily recognize them in‑game.
-
-🔗 **GitHub Repository**
-[https://github.com/yaim0425/YAIM0425-d01b-1x1-entities](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities)
-
-🔗 **Required Dependency**
-[https://github.com/yaim0425/YAIM0425-d00b-core](https://github.com/yaim0425/YAIM0425-d00b-core)
+Each 1×1 machine has its **own item, recipe and technology**, clearly marked so you can easily recognize them in‑game.
 
 ---
 
@@ -47,28 +41,39 @@ Each 1×1 machine has its **own item, recipe, and technology**, clearly marked s
 
 ---
 
-## 🖼️ Screenshots
+## 🔗 Repository
 
-![Screenshot 1](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/raw/code/screenshot/(1).png)
+**MOD**
+[YAIM0425 d01b 1x1 entities](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities)
 
-![Screenshot 2](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/raw/code/screenshot/(2).png)
+**Required**
 
-![Screenshot 3](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/raw/code/screenshot/(3).png)
-
-![Screenshot 4](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/raw/code/screenshot/(4).png)
-
-![Screenshot 5](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/raw/code/screenshot/(5).png)
-
-![Screenshot 6](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/raw/code/screenshot/(6).png)
-
-![Screenshot 7](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/raw/code/screenshot/(7).png)
-
-![Screenshot 8](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/raw/code/screenshot/(8).png)
-
-![Screenshot 9](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/raw/code/screenshot/(9).png)
+[YAIM0425 d00b Core](https://github.com/yaim0425/YAIM0425-d00b-core)
 
 ---
 
 ## ❤️ Support
 
 Suggestions, ideas, and balance feedback are welcome on the GitHub repository.
+
+---
+
+## 🖼️ Screenshots
+
+![Screenshot 1](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/blob/code/screenshot/(1).png)
+
+![Screenshot 2](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/blob/code/screenshot/(2).png)
+
+![Screenshot 3](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/blob/code/screenshot/(3).png)
+
+![Screenshot 4](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/blob/code/screenshot/(4).png)
+
+![Screenshot 5](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/blob/code/screenshot/(5).png)
+
+![Screenshot 6](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/blob/code/screenshot/(6).png)
+
+![Screenshot 7](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/blob/code/screenshot/(7).png)
+
+![Screenshot 8](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/blob/code/screenshot/(8).png)
+
+![Screenshot 9](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/blob/code/screenshot/(9).png)
