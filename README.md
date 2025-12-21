@@ -1,49 +1,67 @@
-# YAIM0425 d01b – 1x1 Entities
+# YAIM0425 d01b – Compacted Entities 1x1 🧱
+
+## 📦 Description
+
+**YAIM0425 d01b – Compacted Entities 1x1** creates **compact versions of many vanilla and modded entities**, reducing their footprint to **1×1 tiles** while preserving their original functionality.
+
+This MOD is designed to dramatically reduce factory size, allowing extremely dense layouts without changing how machines behave internally.
+
+Each compacted entity is a **separate item**, recipe, and technology (when applicable), leaving the original entities untouched.
 
 ---
 
-## 📌 Description
+## ⚙️ How it works (Player view)
 
-**YAIM0425 d01b – 1x1 Entities** lets you place **full‑size machines in a 1×1 tile space**, making your factories much more compact and flexible.
+* New **1×1 compacted versions** of supported entities are added
+* Original entities remain unchanged
+* Compacted entities:
 
-With this MOD enabled, many common machines automatically get a **miniaturized version** that works just like the original, but takes only **one tile** instead of several. This allows you to:
+  * Occupy **only one tile**
+  * Keep their original behavior and purpose
+  * Have adjusted graphics, connections, and interaction points
+* Each compacted entity is:
 
-* Build extremely compact factories
-* Fit machines in tight or irregular spaces
-* Reduce belt and pipe clutter
-* Experiment with new factory layouts
+  * Crafted separately
+  * Unlocked through its own technology (if the original had one)
 
-The MOD works automatically in the background. You don’t need to configure anything: just research or craft the new 1×1 versions and start using them.
-
-Supported machines include (depending on what MODs you have installed):
-
-* Assemblers
-* Furnaces (including electric furnaces)
-* Mining drills
-* Beacons
-* Solar panels
-* Accumulators
-* Boilers and generators
-* Turrets and radars
-* Storage tanks
-
-Each 1×1 machine has its **own item, recipe, and technology**, clearly marked so you can easily recognize them in‑game.
-
-🔗 **GitHub Repository**
-[https://github.com/yaim0425/YAIM0425-d01b-1x1-entities](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities)
-
-🔗 **Required Dependency**
-[https://github.com/yaim0425/YAIM0425-d00b-core](https://github.com/yaim0425/YAIM0425-d00b-core)
+No configuration is required from the player.
 
 ---
 
-## ⚠️ Warnings & Usage Notes
+## 🧩 Use cases
 
-* ❗ This MOD can make the game **much easier** by allowing very dense builds
-* ❗ Large numbers of machines in a small area may affect **performance (UPS)**
-* ❗ Some machines are intentionally excluded to avoid bugs or visual issues
-* ✔ Compatible with most major overhaul MODs
-* ✔ No configuration required – works automatically
+* 🏗️ Ultra-compact factory designs
+* 🧪 Testing and sandbox environments
+* 🚀 High-density late-game bases
+* 🧠 Creative and experimental layouts
+
+---
+
+## ⚠️ Warnings
+
+* 🚨 This MOD **strongly breaks vanilla balance**
+* 📐 Factory design constraints are largely removed
+* 🔌 Some entities with complex connections may behave differently visually
+* ❌ Not recommended for:
+  * Vanilla-balanced playthroughs
+  * Players seeking original spatial challenges
+
+---
+
+## 🔗 Repository
+
+**MOD**
+[YAIM0425 d01b 1x1 entities](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities)
+
+**Required**
+
+[YAIM0425 d00b Core](https://github.com/yaim0425/YAIM0425-d00b-core)
+
+---
+
+## ❤️ Support
+
+Suggestions, ideas, and balance feedback are welcome on the GitHub repository.
 
 ---
 
@@ -66,9 +84,3 @@ Each 1×1 machine has its **own item, recipe, and technology**, clearly marked s
 ![Screenshot 8](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/raw/code/screenshot/(8).png)
 
 ![Screenshot 9](https://github.com/yaim0425/YAIM0425-d01b-1x1-entities/raw/code/screenshot/(9).png)
-
----
-
-## ❤️ Support
-
-Suggestions, ideas, and balance feedback are welcome on the GitHub repository.
