@@ -686,6 +686,25 @@ function This_MOD.create_entity(space)
         end
     end
 
+    --- Aliniar humo o vapor
+    if Entity.smoke then
+        for _, value in pairs(Entity.smoke) do
+            for dir, _ in pairs(defines.direction) do
+                local Key = dir .. "_position"
+                if value[Key] then
+                    if value[Key][1] == 0 and value[Key][2] == 0 then
+                        value[Key] = nil
+                    else
+                        value[Key] = {
+                            value[Key][1] * Factor[1],
+                            value[Key][2] * Factor[2]
+                        }
+                    end
+                end
+            end
+        end
+    end
+
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 
